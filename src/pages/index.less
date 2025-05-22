@@ -1,3 +1,12 @@
+.markdown-container {
+    width: 100%;
+    height: 100vh;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+    background: #0F172A;
+    position: relative;
+}
 .markdown-container table {
     width: 100%;
     border-collapse: collapse;
@@ -55,3 +64,54 @@
     color: #FFFFFF;
     text-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
   }
+
+
+//   /* 基础样式 */
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #0F172A;  /* dark 主题色 */
+    color: #F8FAFC;  /* light 主题色 */
+  }
+  
+  /* 自定义动画 */
+  @keyframes particles {
+    0% { background-position: 0 0; }
+    100% { background-position: 100% 100%; }
+  }
+  
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
+  
+  /* Tailwind 自定义样式 */
+  @layer utilities {
+    .text-glow {
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.7), 0 0 20px rgba(0, 240, 255, 0.5);
+    }
+    .bg-grid {
+      background-image: 
+        linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    .animate-particles {
+      animation: particles 30s linear infinite;
+    }
+    .scale-on-touch:active {
+      transform: scale(0.95);
+    }
+  }
+
+  .fixed {
+    position: absolute; /* 绝对定位 */
+    left: 50%;        /* 左边缘对齐父容器水平中心 */
+    top: 50%;         /* 上边缘对齐父容器垂直中心 */
+    transform: translate(-50%, -50%); /* 自身向左上偏移50%宽高 */
+  }
+    
+

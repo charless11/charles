@@ -1,4 +1,4 @@
-# <span style="color:#2D3748">前端面试题总结</span>  
+# <span style="color:#ccc">前端面试题总结</span>  
 
 ## <span style="color:#8B949E">CSS</span> 
 
