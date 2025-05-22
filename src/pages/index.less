@@ -1,0 +1,57 @@
+.markdown-container table {
+    width: 100%;
+    border-collapse: collapse;
+    background: linear-gradient(135deg, #0F2027 0%, #203A43 50%, #2C5364 100%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  /* 表头样式（保持原有科技感） */
+  .markdown-container th {
+    background: radial-gradient(circle, #0F2027, #2C5364);
+    color: #00FFFF;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+    padding: 16px 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+  }
+  
+  /* 最左侧列（保留您的绿色需求） */
+  .markdown-container td:first-child {
+    background: rgba(15, 32, 39, 0.7);
+    backdrop-filter: blur(2px);
+    border-right: 1px solid rgba(0, 255, 255, 0.2);
+    color: #00FFAA;
+    font-weight: 500;
+    padding: 14px 12px;
+  }
+  
+  /* 主体内容优化方案 */
+  .markdown-container td:not(:first-child) {
+    color: #E0F7FA; /* 浅青白色 */
+    font-weight: 400;
+    padding: 14px 12px;
+    border-bottom: 1px solid rgba(224, 247, 250, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  /* 隔行变色增强可读性 */
+  .markdown-container tr:nth-child(odd) td:not(:first-child) {
+    background: rgba(32, 58, 67, 0.4);
+  }
+  .markdown-container tr:nth-child(even) td:not(:first-child) {
+    background: rgba(44, 83, 100, 0.4);
+  }
+  
+  /* 悬浮效果升级 */
+  .markdown-container tr:hover td:first-child {
+    background: rgba(15, 32, 39, 0.9);
+    color: #00FF88;
+  }
+  .markdown-container tr:hover td:not(:first-child) {
+    background: rgba(0, 255, 255, 0.15) !important;
+    color: #FFFFFF;
+    text-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
+  }
