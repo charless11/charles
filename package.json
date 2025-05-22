@@ -1,4 +1,6 @@
 {
+  "homepage": "https://charless11.github.io/charles/", 
+  "name": "charles", 
   "private": true,
   "author": "",
   "scripts": {
