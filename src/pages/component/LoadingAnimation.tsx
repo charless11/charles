@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '../index.less'
+import './component.less'
 
 
 const LoadingAnimation = () => {

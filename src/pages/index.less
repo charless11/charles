@@ -1,11 +1,23 @@
 .markdown-container {
     width: 100%;
     height: 100vh;
-    // display: flex;
-    // align-items: center;
-    // justify-content: center;
     background: #0F172A;
     position: relative;
+    overflow-x: hidden;
+
+    .title {
+      font-size: 30px;
+      font-weight: 600;
+      color:#ccc
+    }
+      .toTop {
+      position: fixed;
+      right: 40px;
+      bottom: 40px;
+      font-size: 40px;
+      opacity: 0.5;
+      cursor: pointer;
+    }
 }
 .markdown-container table {
     width: 100%;
@@ -14,6 +26,7 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     overflow: hidden;
+    table-layout: auto
   }
   
   /* 表头样式（保持原有科技感） */
@@ -25,6 +38,11 @@
     font-weight: 600;
     letter-spacing: 0.5px;
     border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+    padding: 12px 16px; /* 增加内边距 */
+    text-align: left;
+    white-space: normal; /* 允许换行 */
+    word-break: break-word; /* 长单词或URL强制换行 */
+    
   }
   
   /* 最左侧列（保留您的绿色需求） */
@@ -35,6 +53,7 @@
     color: #00FFAA;
     font-weight: 500;
     padding: 14px 12px;
+    min-width: 70px; 
   }
   
   /* 主体内容优化方案 */
@@ -44,6 +63,8 @@
     padding: 14px 12px;
     border-bottom: 1px solid rgba(224, 247, 250, 0.1);
     transition: all 0.3s ease;
+    min-width: 70px; 
+
   }
   
   /* 隔行变色增强可读性 */
@@ -65,53 +86,7 @@
     text-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
   }
 
-
-//   /* 基础样式 */
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: #0F172A;  /* dark 主题色 */
-    color: #F8FAFC;  /* light 主题色 */
+  .table-wrapper {
+    overflow: auto;
   }
-  
-  /* 自定义动画 */
-  @keyframes particles {
-    0% { background-position: 0 0; }
-    100% { background-position: 100% 100%; }
-  }
-  
-  @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
-  }
-  
-  /* Tailwind 自定义样式 */
-  @layer utilities {
-    .text-glow {
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.7), 0 0 20px rgba(0, 240, 255, 0.5);
-    }
-    .bg-grid {
-      background-image: 
-        linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
-      background-size: 20px 20px;
-    }
-    .animate-particles {
-      animation: particles 30s linear infinite;
-    }
-    .scale-on-touch:active {
-      transform: scale(0.95);
-    }
-  }
-
-  .fixed {
-    position: absolute; /* 绝对定位 */
-    left: 50%;        /* 左边缘对齐父容器水平中心 */
-    top: 50%;         /* 上边缘对齐父容器垂直中心 */
-    transform: translate(-50%, -50%); /* 自身向左上偏移50%宽高 */
-  }
-    
 

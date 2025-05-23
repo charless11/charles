@@ -1,8 +1,9 @@
-# <span style="color:#ccc">前端面试题总结</span>  
+<!-- # <span style="color:#ccc">前端面试题总结</span>   -->
 
 ## <span style="color:#8B949E">CSS</span> 
 
 ### <span style="color:#FF6F00">伪类与伪元素区别</span>
+  <div class="table-wrapper" markdown="block">
 
   | 对比项          | 伪类（Pseudo-classes）                     | 伪元素（Pseudo-elements）               |
   |:----------------|:------------------------------------------|:---------------------------------------|
@@ -17,16 +18,22 @@
   | **权重计算**    | 与类选择器同级（0,0,1,0）                | 与元素选择器同级（0,0,0,1）             |
   | **数量限制**    | 可叠加多个（如 `a:hover:active`）         | 一个选择器只能有一个伪元素（需分开写）    |
 
+  </div>
+
 代码示例对比：
+  <div class="table-wrapper" markdown="block">
 
   | 类型       | 示例代码                          | 效果描述                     |
   |------------|----------------------------------|----------------------------|
   | **伪类**   | `a:hover { color: red; }`        | 鼠标悬停时链接变红           |
   | **伪元素** | `p::first-line { font-weight: bold; }` | 段落首行文字加粗          |
   | **组合使用** | `.box:hover::after { content: "!"; }` | 悬停时添加感叹号         |
+  </div>
 
 ### <span style="color:#FF6F00">link 和@import 引入方式区别</span>
 
+
+  <div class="table-wrapper" markdown="block">
 
   | 对比项       | `<link>`                                    | `@import`                                  |
   |--------------|---------------------------------------------|--------------------------------------------|
@@ -36,6 +43,7 @@
   | **JS 控制**  | 可通过 JS 动态插入/修改                     | 无法直接操作，需修改 CSS 文件或 `<style>` 内容 |
   | **预加载**   | 支持 `<link rel="preload">`                 | 不支持                                     |
   | **适用场景** | 常规引入、性能优化、CDN 资源                | CSS 模块化、条件加载（如媒体查询）          |
+  </div>
 
 ### <span style="color:#FF6F00"> css继承 </span>
 
@@ -43,6 +51,7 @@
 
 📌 可继承属性 vs 不可继承属性
 
+  <div class="table-wrapper" markdown="block">
 
   | 特性                | 可继承属性                                                                 | 不可继承属性                                                                 |
   |---------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------|
@@ -54,6 +63,7 @@
   | **典型应用场景**    | 统一字体/文字样式（在 `body` 设置全局字体）                                 | 布局/盒模型属性（需单独控制）                                                 |
   | **性能影响**        | 减少重复代码，提升渲染效率                                                 | 过度使用 `inherit` 会增加样式计算复杂度                                       |
   | **调试技巧**        | 浏览器开发者工具中显示"Inherited from [父元素]"                            | 检查计算样式时显示明确赋值来源                                                |
+  </div>
 
 ### <span style="color:#FF6F00"> 标准模型和 IE 模型的区别 </span>
 
@@ -79,6 +89,9 @@
   BFC 是 CSS 渲染过程中的一个独立布局环境，它决定了块级盒子如何布局，并控制其内部元素与外部元素的关系。BFC 就像一个隔离的容器，内部的布局规则不会影响外部，外部的布局也不会影响内部。
 
 ### 📌 BFC 核心特性
+
+  <div class="table-wrapper" markdown="block">
+
   | 特性                | 说明                                                                 | 触发示例                     |
   |---------------------|---------------------------------------------------------------------|-----------------------------|
   | 独立渲染区域         | 内部布局不影响外部，外部不影响内部                                   | `overflow: hidden`          |
@@ -86,7 +99,12 @@
   | 包含浮动元素         | 父容器高度计算包含浮动子元素                                         | `float: left`               |
   | 阻止浮动覆盖         | BFC区域不与浮动元素重叠                                              | `position: absolute`        |
 
+  </div>
+
 ### 🚀 BFC 触发方式对比
+
+  <div class="table-wrapper" markdown="block">
+
   | 触发属性              | 推荐度 | 副作用                      | 适用场景                |
   |-----------------------|--------|----------------------------|-------------------------|
   | `display: flow-root`  | ✅ 首选 | 无                         | 现代浏览器项目          |
@@ -94,26 +112,43 @@
   | `float: left/right`   | ❌ 避免 | 破坏文档流                  | 特殊浮动布局            |
   | `position: absolute`  | ❌ 避免 | 脱离文档流                  | 绝对定位场景            |
 
+  </div>
+
 ### 🔍 BFC 应用场景
+
+  <div class="table-wrapper" markdown="block">
+
   | 问题                  | 解决方案                          | 代码示例                          |
   |-----------------------|----------------------------------|-----------------------------------|
   | 浮动高度塌陷           | 父元素触发BFC                    | ```css .parent { overflow: hidden; }``` |
   | 外边距合并             | 创建BFC隔离                      | ```html <div style="display:flow-root"><p>text</p></div>``` |
   | 两栏布局               | 非浮动侧触发BFC                  | ```css .right { overflow: auto; }``` |
 
+  </div>
+
 ### 📜 BFC 布局规则对比
+
+  <div class="table-wrapper" markdown="block">
+
   | 规则                | 普通流              | BFC环境              |
   |---------------------|--------------------|----------------------|
   | 浮动参与高度计算      | ❌ 不参与           | ✅ 参与               |
   | 垂直外边距合并        | ✅ 合并             | ❌ 不合并             |
   | 与浮动元素重叠        | ✅ 可能重叠         | ❌ 不重叠             |
 
+  </div>
+
 ### ⚠️ 注意事项
+
+  <div class="table-wrapper" markdown="block">
+
   | 情况                | 处理建议                          |
   |---------------------|----------------------------------|
   | 多层BFC嵌套         | 避免过度使用，增加渲染复杂度       |
   | 移动端适配          | 优先使用`display: flow-root`      |
   | 表格单元格          | 默认具有BFC特性，无需额外触发      |
+
+  </div>
 
 ### 💡 最佳实践
   ```css
@@ -134,13 +169,17 @@
 
 #### 📌 核心方案对比
 
+  <div class="table-wrapper" markdown="block">
+
   | 方案                | 代码示例                                                                 | 兼容性   | 特点                     |
   |---------------------|-------------------------------------------------------------------------|---------|--------------------------|
   | **Flexbox**         | ```css.parent { display: flex; align-items: center; }```               | IE10+   | 最简单现代的方案          |
   | **Grid**            | ```css.parent { display: grid; place-items: center; }```               | IE不支持| 最简洁的写法             |
   | **绝对定位**| ```css.child { position: absolute; top: 0;left: 0;right: 0;left: 0; }``` | IE9+    | 兼容性最好的动态方案      |
   | **绝对定位+Transform**| ```css.child { position: absolute; top: 50%; transform: translateY(-50%); }``` | IE9+    | 兼容性最好的动态方案      |
-  | **Table-Cell**      | ```css.parent { display: table-cell; vertical-align: middle; height: 100px; }``` | IE8+    | 兼容老旧浏览器           |
+  | **Table-Cell**      | ```css.parent { display: table-cell; vertical-align: middle; height: 100px; }``` | IE8+    | 兼容老旧浏览器   |
+
+  </div>   
 
 #### 💡 最佳实践推荐
 
@@ -157,17 +196,22 @@
 
 ### <span style="color:#FF6F00"> 移动端 1px 问题 </span>
 
-#### 📌 移动端 1px 问题解决方案对比表
-
 #### 方案对比
+
+<div class="table-wrapper" markdown="block">
+
   | 方案名称               | 实现原理                  | 优点                  | 缺点                  | 适用场景              | 代码示例                                                                 |
   |-----------------------|-------------------------|----------------------|----------------------|---------------------|-------------------------------------------------------------------------|
   | **伪元素+transform**  | 缩放伪元素边框            | 兼容性好，效果精准      | 需要额外DOM结构        | 通用场景              | ```css .border::after { transform: scaleY(0.5); }```                   |
   | **viewport缩放**      | 动态调整viewport缩放比例   | 一劳永逸              | 影响全局布局           | 简单页面              | ```js meta.content=`initial-scale=${1/window.devicePixelRatio}` ```    |
   | **border-image**      | 使用图片替代边框          | 无性能问题            | 修改颜色不便           | 固定颜色边框          | ```css border-image: url(border.png) 2 stretch; ```                     |
-  | **渐变模拟**          | background渐变模拟边框    | 无DOM依赖            | 只支持单边            | 单边边框需求          | ```css background: linear-gradient(#000 50%,transparent 0) bottom repeat-x;``` |
+  | **渐变模拟**          | background渐变模拟边框    | 无DOM依赖            | 只支持单边            | 单边边框需求          | ```css background: linear-gradient(#000 50%,transparent 0) bottom repeat-x;``` | 
+   </div>
 
 #### 兼容性对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 方案                | iOS | Android | 微信浏览器 | 备注                  |
   |--------------------|-----|---------|-----------|----------------------|
   | transform缩放      | ✓   | ✓       | ✓         | 最稳定推荐方案         |
@@ -175,13 +219,20 @@
   | border-image       | ✓   | ✓       | ✓         | 需准备多倍图           |
   | 渐变模拟           | ✓   | ✓       | ✓         | 仅适合简单边框         |
 
+  </div>
+
 #### 性能对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 方案                | 渲染性能 | 内存占用 | CPU消耗 | 综合评价 |
   |--------------------|---------|---------|--------|----------|
   | transform缩放      | ★★★★☆   | ★★★★☆   | ★★★☆☆  | 最佳平衡   |
   | viewport缩放       | ★★☆☆☆   | ★★★☆☆   | ★★☆☆☆  | 不推荐    |
   | border-image       | ★★★★☆   | ★★★☆☆   | ★★★★☆  | 适合静态   |
   | 渐变模拟           | ★★★★★   | ★★★★☆   | ★★★★★  | 性能最优   |
+
+  </div>
 
 ### 💡 最佳实践代码
 
@@ -207,6 +258,9 @@
 ### <span style="color:#FF6F00"> 移动端适配方案 </span>
 
 #### 📌 核心方案对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 方案               | 实现原理                | 优点                  | 缺点                  | 适用场景             | 代码示例                                                                 |
   |--------------------|------------------------|----------------------|----------------------|--------------------|-------------------------------------------------------------------------|
   | **Viewport缩放**   | 动态计算initial-scale   | 实现简单              | 影响所有元素           | 简单H5页面          | `<meta name="viewport" content="width=device-width, initial-scale=0.5">` |
@@ -214,13 +268,20 @@
   | **VW/VH布局**      | 使用视窗单位            | 纯CSS实现             | 低版本兼容性差        | 现代浏览器项目       | `.box { width: 50vw; height: 20vh; }`                                  |
   | **Flexible.js**    | REM+viewport缩放        | 兼容性好              | 已停止维护            | 旧版浏览器兼容       | `<script src="//g.tbcdn.cn/mtb/lib-flexible/0.3.4/flexible.js"></script>` |
 
+  </div>
+
 #### 📊 技术指标对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 特性              | Viewport | REM    | VW/VH  | Flexible |
   |-------------------|---------|--------|--------|----------|
   | **需要JS**        | ❌       | ✅      | ❌      | ✅        |
   | **CSS单位**       | px      | rem    | vw/vh  | rem      |
   | **兼容性**        | IE9+    | IE9+   | IE11+  | IE6+     |
   | **维护成本**      | 低      | 中     | 低     | 中       |
+
+  </div>
 
 #### 💡 最佳实践示例
 ##### VW+REM混合方案
@@ -237,11 +298,14 @@
 
   ```
 
-## <span style="color:#8B949E">JS</span> 
+## <span id='JS' style="color:#8B949E">JS</span> 
 
 ### <span style="color:#FF6F00"> HTMl5 新特性 </span>
 
 #### 📌 核心新特性对比表
+
+ <div class="table-wrapper" markdown="block">
+
   | 分类            | 特性                  | 说明                                                                 | 代码示例                                                                 |
   |-----------------|-----------------------|---------------------------------------------------------------------|-------------------------------------------------------------------------|
   | **语义化标签**  | `<header>`            | 定义文档页眉                                                        | ```html <header><h1>网站标题</h1></header>```                          |
@@ -257,7 +321,12 @@
   | **API**         | Geolocation API       | 获取地理位置                                                        | ```js navigator.geolocation.getCurrentPosition(showPosition)```        |
   |                 | Web Workers           | 多线程处理                                                          | ```js const worker = new Worker('worker.js')```                         |
 
+  </div>
+
 #### 🚀 其他重要特性
+
+ <!-- <div class="table-wrapper" markdown="block"> -->
+
   | 特性                  | 说明                                                                 | 兼容性       |
   |-----------------------|---------------------------------------------------------------------|-------------|
   | **WebSocket**         | 全双工通信协议                                                      | IE10+       |
@@ -265,6 +334,8 @@
   | **Drag & Drop API**   | 原生拖放接口                                                        | IE9+        |
   | **History API**       | 操作浏览器历史记录                                                  | IE10+       |
   | **Web Components**    | 创建可重用自定义元素                                                | Chrome/Firefox |
+
+  <!-- <div> -->
 
 #### 💡 代码示例集
   ```html
@@ -297,6 +368,9 @@
 ### <span style="color:#FF6F00"> Canvas 与 SVG 的区别 </span>
 
 #### 📌 核心特性对比
+
+<div class="table-wrapper" markdown="block">
+
   | 特性                | Canvas                          | SVG                           |
   |---------------------|--------------------------------|-------------------------------|
   | **类型**            | 位图（像素操作）                 | 矢量图（XML描述）              |
@@ -307,7 +381,14 @@
   | **缩放表现**        | 会失真（像素放大）                | 无损缩放                       |
   | **适用场景**        | 数据可视化/游戏/图像处理           | 图标/地图/可交互图表            |
 
+</div>
+
+<span></span>
+
 #### 💻 代码实现对比
+
+<div class="table-wrapper" markdown="block">
+
   | 功能                | Canvas 示例                     | SVG 示例                      |
   |---------------------|--------------------------------|-------------------------------|
   | **绘制矩形**        | ```js ctx.fillRect(10,10,50,50)``` | ```xml <rect x="10" y="10" width="50" height="50"/>``` |
@@ -315,7 +396,12 @@
   | **添加文本**        | ```js ctx.fillText("Hello",10,50)``` | ```xml <text x="10" y="50">Hello</text>``` |
   | **动画实现**        | 需手动清除重绘                   | 可使用CSS/SMIL动画             |
 
+</div>
+
 #### 🚀 技术指标对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 指标                | Canvas                          | SVG                           |
   |---------------------|--------------------------------|-------------------------------|
   | **DOM支持**         | 无DOM节点                      | 完整DOM支持                   |
@@ -324,7 +410,12 @@
   | **导出格式**        | PNG/JPG（位图）                | PNG/SVG（矢量）               |
   | **可访问性**        | 较差（需额外ARIA）              | 原生支持无障碍                 |
 
+  </div>
+
 #### 🌟 选择指南
+
+ <div class="table-wrapper" markdown="block">
+
   | 需求场景            | 推荐技术                        | 原因                          |
   |---------------------|--------------------------------|-------------------------------|
   | 动态数据可视化       | Canvas                         | 高性能大数据量渲染             |
@@ -332,6 +423,8 @@
   | 游戏开发            | Canvas（WebGL）                | 需要帧级控制                   |
   | 响应式图标          | SVG                            | 矢量无损缩放                   |
   | 图像滤镜处理        | Canvas                         | 像素级操作能力                 |
+
+  </div>
 
 #### ⚠️ 注意事项
 1. **Canvas 必须设置宽高属性**
@@ -346,12 +439,16 @@
 
 #### 1. 基本定义对比
 
+ <div class="table-wrapper" markdown="block">
+
   | **特性**         | `for...of`                          | `for...in`                          |
   |------------------|-------------------------------------|-------------------------------------|
   | **ES版本**       | ES6 (ECMAScript 2015)               | ES1 (ECMAScript 1st Edition)        |
   | **迭代目标**     | 可迭代对象的值                      | 对象的可枚举属性                    |
   | **原型链**       | 不遍历原型链                        | 会遍历原型链上的可枚举属性          |
   | **适用数据类型** | Array, Map, Set, String等可迭代对象 | 普通对象(Object)                     |
+
+  </div>
 
 #### 2. 代码示例对比
 
@@ -421,6 +518,9 @@
 ### <span style="color:#FF6F00"> Set Map 区别 </span>
 
 #### 📌 核心特性对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 特性                | Set                          | Map                           |
   |---------------------|------------------------------|-------------------------------|
   | **数据结构**        | 值集合（唯一值）              | 键值对集合（唯一键）            |
@@ -430,7 +530,12 @@
   | **迭代顺序**        | 插入顺序                      | 插入顺序                       |
   | **典型用途**        | 去重/集合运算                 | 字典/关联数据存储               |
 
+  </div>
+
 #### 💻 基础操作对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 操作                | Set 示例                     | Map 示例                      |
   |---------------------|-----------------------------|-------------------------------|
   | **创建**            | `const s = new Set()`       | `const m = new Map()`         |
@@ -441,7 +546,12 @@
   | **清空集合**        | `s.clear()`                 | `m.clear()`                   |
   | **遍历元素**        | `s.forEach(v => ...)`       | `m.forEach((v,k) => ...)`     |
 
+  </div>
+
 #### 🚀 高级特性对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 功能                | Set                          | Map                           |
   |---------------------|------------------------------|-------------------------------|
   | **构造时初始化**    | 接受数组/可迭代对象           | 接受`[key,value]`数组          |
@@ -450,7 +560,12 @@
   | **转换数组**        | `[...set]` / `Array.from(set)` | `[...map]`（得到键值对数组）   |
   | **Weak版本**        | `WeakSet`（弱引用集合）       | `WeakMap`（弱引用字典）        |
 
+</div>
+
 #### 🌟 使用场景对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 场景                | 推荐使用                     | 原因                          |
   |---------------------|-----------------------------|-------------------------------|
   | 数据去重            | Set                         | 自动去重简单高效               |
@@ -458,6 +573,8 @@
   | DOM节点标记         | WeakSet                     | 避免内存泄漏                   |
   | 私有数据存储         | WeakMap                     | 键为对象时不阻止GC             |
   | 集合运算（并/交/差） | Set                         | 原生支持`union`/`intersection` |
+
+</div>
 
 #### 💡 代码示例
   ```javascript
@@ -487,6 +604,9 @@
 ### <span style="color:#FF6F00"> JS 中内存泄漏几种情况 </span>
 
 #### 📌 内存泄漏主要场景对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 泄漏类型            | 产生原因                                                                 | 代码示例                                                                 | 解决方案                                                                 |
   |---------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|
   | **意外的全局变量**  | 未声明的变量或`this`指向改变                                            | ```js function fn() { leakVar = 'xxx'; this.leakProp = 'yyy' }```       | 使用严格模式`'use strict'`，通过ESLint检测                               |
@@ -496,13 +616,20 @@
   | **事件监听未移除**  | 未正确使用`removeEventListener`                                         | ```js window.addEventListener('resize', onResize); // 未移除```         | 使用弱引用`WeakRef`或组件卸载时移除                                     |
   | **缓存无限增长**    | 缓存对象未设置上限                                                       | ```js const cache = {}; function setCache(k,v) { cache[k] = v; }```     | 使用LRU缓存策略，设置最大条目数                                         |
 
+  </div>
+
 #### 🚀 检测与调试方法
+
+ <div class="table-wrapper" markdown="block">
+
   | 工具/方法           | 使用方式                                                                 | 适用场景                                                                 |
   |---------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|
   | **Chrome DevTools** | Memory面板拍摄堆快照对比                                                 | 定位泄漏源                                                              |
   | **Performance**     | 录制内存变化曲线                                                         | 观察内存增长趋势                                                        |
   | `process.memoryUsage()` | Node.js内存监控                                                        | 服务端内存泄漏检测                                                      |
   | **WeakMap**         | 使用弱引用存储临时数据                                                   | 防止第三方库导致泄漏                                                    |
+
+  </div>
 
 #### 💡 最佳实践代码示例
   ```javascript
@@ -542,6 +669,9 @@
 ### <span style="color:#FF6F00"> 如何判断数组和对象 </span>
 
 #### 📌 基础判断方法
+
+ <div class="table-wrapper" markdown="block">
+
   | 方法                     | 数组示例                          | 对象示例                          | 返回值       | 说明                  |
   |--------------------------|----------------------------------|----------------------------------|-------------|-----------------------|
   | **typeof**               | `typeof []`                     | `typeof {}`                     | `"object"`  | 无法区分              |
@@ -549,6 +679,8 @@
   | **constructor**          | `[].constructor === Array`      | `{}.constructor === Object`     | `true/false`| 可被修改              |
   | **Array.isArray()**      | `Array.isArray([])`             | `Array.isArray({})`             | `true/false`| ES5+推荐              |
   | **Object.prototype.toString** | `Object.prototype.toString.call([])` | `Object.prototype.toString.call({})` | `"[object Array]"`/`"[object Object]"` | 最可靠        |
+
+  </div>
 
 #### 💡 最佳实践代码
   ```javascript
@@ -570,6 +702,9 @@
 ### <span style="color:#FF6F00"> instanceof 和 typeof 区别 </span>
 
 #### 📌 核心区别
+
+ <div class="table-wrapper" markdown="block">
+
   | 特性               | `typeof`                          | `instanceof`                      |
   |--------------------|----------------------------------|----------------------------------|
   | **作用**           | 返回操作数的基本类型字符串          | 检测构造函数的`prototype`是否在对象原型链上 |
@@ -577,7 +712,12 @@
   | **操作数**         | 任意值                            | 左操作数：对象<br>右操作数：构造函数    |
   | **主要用途**       | 基本类型判断                      | 对象类型继承关系判断               |
 
+  </div>
+
 #### 💻 使用示例对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 判断目标           | `typeof` 用法                 | `instanceof` 用法             | 结果差异说明            |
   |--------------------|------------------------------|------------------------------|-----------------------|
   | 数字               | `typeof 42`                  | `42 instanceof Number`       | `"number"` vs `false` |
@@ -589,19 +729,31 @@
   | 函数               | `typeof function(){}`        | `(function(){}) instanceof Function` | `"function"` vs `true` |
   | 未定义            | `typeof undefined`           | `undefined instanceof Object` | `"undefined"` vs `false` |
 
+  </div>
+
   #### 🚀 特殊案例对比
+
+   <div class="table-wrapper" markdown="block">
+
   | 场景                | `typeof` 表现               | `instanceof` 表现            | 原因分析               |
   |--------------------|----------------------------|-----------------------------|-----------------------|
   | 包装对象            | `typeof new Number(1)`     | `new Number(1) instanceof Number` | `"object"` vs `true`  |
   | 跨iframe对象        | `typeof iframeArray`       | `iframeArray instanceof Array` | 正常返回 vs 可能`false` |
   | 自定义类            | `typeof new MyClass()`     | `new MyClass() instanceof MyClass` | `"object"` vs `true`  |
 
+  </div>
+
   #### ⚠️ 注意事项
+
+   <div class="table-wrapper" markdown="block">
+
   | 问题                | `typeof` 风险              | `instanceof` 风险           | 解决方案               |
   |--------------------|---------------------------|----------------------------|-----------------------|
   | null误判           | `typeof null === "object"` | 无此问题                   | 额外检查`=== null`     |
   | 基本类型检测        | 有效                      | 对基本类型始终返回`false`    | 配合`constructor`检查  |
   | 原型链修改影响      | 不受影响                  | 结果可能被修改              | 慎改`__proto__`       |
+
+  </div>
 
 #### 💡 最佳实践
   ```javascript
@@ -660,6 +812,8 @@
 
 #### 1. 常用解决方案对比
 
+ <div class="table-wrapper" markdown="block">
+
   | **解决方案**        | **实现代码示例**                                                                 | **优点**                          | **缺点**                          | **适用场景**               |
   |---------------------|---------------------------------------------------------------------------------|-----------------------------------|-----------------------------------|---------------------------|
   | **toFixed()**       | `parseFloat((0.1 + 0.2).toFixed(1)) === 0.3`                                    | 简单易用                          | 返回字符串需转换，会四舍五入      | 简单显示场景               |
@@ -667,6 +821,8 @@
   | **Number.EPSILON**  | `Math.abs(0.1 + 0.2 - 0.3) < Number.EPSILON`                                   | 高精度比较                        | 不能直接修正计算值                | 科学计算比较               |
   | **Math.round()**    | `Math.round((0.1 + 0.2) * 1e10) / 1e10 === 0.3`                                | 可控制精度                        | 大数运算可能溢出                  | 需要指定精度的计算         |
   | **第三方库**        | `new Decimal(0.1).plus(0.2).equals(0.3)`                                       | 完美解决精度问题                  | 增加项目体积                      | 金融/财务系统             |
+
+  </div>
 
 #### 2. 方案实现细节对比
 
@@ -695,6 +851,9 @@
 ### <span style="color:#FF6F00"> 如何判断一个空对象 </span>
 
 #### 📌 空对象判断方案对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 方法                     | 代码示例                                                                 | 优点                  | 缺点                  |
   |--------------------------|-------------------------------------------------------------------------|----------------------|----------------------|
   | **Object.keys()**        | `Object.keys(obj).length === 0`                                        | ES5+标准方法          | 不检查不可枚举属性     |
@@ -702,6 +861,8 @@
   | **for...in循环**         | `function isEmpty(obj) { for(let key in obj) return false; return true; }` | 检查所有可枚举属性     | 手动实现较繁琐         |
   | **Object.getOwnPropertyNames()** | `Object.getOwnPropertyNames(obj).length === 0`                     | 包含不可枚举属性       | ES5+，性能中等        |
   | **Reflect.ownKeys()**    | `Reflect.ownKeys(obj).length === 0`                                    | 包含Symbol键          | ES6+，兼容性要求高     |
+
+  </div>
 
 #### 💡 最佳实践代码
   ```javascript
@@ -727,11 +888,16 @@
 
 
 #### 🌟 特殊案例处理
+
+ <div class="table-wrapper" markdown="block">
+
   | 场景                | 问题                          | 解决方案                                                                 |
   |---------------------|------------------------------|-------------------------------------------------------------------------|
   | **原型链属性**      | `Object.keys`不检查原型链      | 使用`for...in`+`hasOwnProperty`或`Object.getOwnPropertyNames()`         |
   | **Symbol键**        | `Object.keys`忽略Symbol       | 使用`Reflect.ownKeys()`                                                |
   | **非纯对象**        | 如`Date`/`Array`实例          | 先判断对象类型：`Object.prototype.toString.call(obj) === '[object Object]'` |
+
+</div>
 
 #### ⚠️ 常见误区
   ```javascript
@@ -773,27 +939,42 @@
 ### <span style="color:#FF6F00"> defer 和 async 区别 </span>
 
 #### 📌 核心特性对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 特性                | `<script defer>`                  | `<script async>`                 | 普通 `<script>`            |
   |---------------------|----------------------------------|----------------------------------|---------------------------|
   | **下载时机**        | 立即下载，不阻塞HTML解析           | 立即下载，不阻塞HTML解析           | 立即下载并阻塞HTML解析       |
   | **执行时机**        | HTML解析完成后，DOMContentLoaded前 | 下载完成后立即执行（可能阻塞HTML解析） | 下载后立即执行并阻塞HTML解析 |
   | **执行顺序**        | 保持文档顺序                       | 无序（先下载完先执行）              | 按文档顺序                 |
   | **适用场景**        | 依赖DOM的脚本                      | 独立第三方脚本（如统计代码）         | 需要立即执行的脚本           |
+  </div>
+
 
 #### 💻 代码示例对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 加载方式            | HTML 代码示例                     | 执行流程图解                     |
   |---------------------|----------------------------------|--------------------------------|
   | **defer**           | `<script src="a.js" defer></script>` | HTML解析 → 下载脚本 → DOM构建完成 → 按序执行 |
   | **async**           | `<script src="b.js" async></script>` | HTML解析 → 下载脚本 → 下载完立即执行（无序） |
   | **普通script**      | `<script src="c.js"></script>`     | HTML解析暂停 → 下载执行 → 继续解析 |
 
+  </div>
+
 #### 🚀 技术指标对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 指标                | defer                          | async                         | 普通script                  |
   |---------------------|--------------------------------|-------------------------------|-----------------------------|
   | **IE支持**          | IE10+                          | IE10+                         | 全支持                      |
   | **是否阻塞解析**     | 否                             | 可能阻塞（执行时）             | 是                          |
   | **DOMContentLoaded** | 在其前执行                     | 可能在其前后执行               | 在其前执行                   |
   | **推荐使用位置**     | `<head>`中声明                 | `<head>`或`<body>`            | `<body>`底部                |
+
+</div>
 
 #### 💡 最佳实践
   ```html
@@ -813,11 +994,16 @@
 
 
 #### ⚠️ 常见误区
+
+ <div class="table-wrapper" markdown="block">
+
   | 错误用法            | 问题分析                      | 正确做法                  |
   |---------------------|-----------------------------|--------------------------|
   | `defer+async`同时用 | 浏览器会忽略`async`           | 只选其一（优先`defer`）   |
   | 动态插入的script     | 默认行为类似`async`           | 显式设置`script.async = false` |
   | 多个`async`脚本依赖 | 可能因执行顺序出错             | 改用`defer`或打包合并     |
+
+  </div>
 
 #### 🌟 执行时序图示
 ```mermaid
@@ -856,26 +1042,41 @@
 ### <span style="color:#FF6F00"> this apply、call、bind 区别 </span>
 
 #### 📌 核心区别对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 方法       | 调用方式                      | 参数传递形式           | 执行时机       | 返回值          | 应用场景                     |
   |------------|-----------------------------|----------------------|--------------|----------------|----------------------------|
   | **call**   | `func.call(thisArg, arg1, arg2)` | 逐个参数传递          | 立即执行       | 函数返回值       | 需要明确this和参数列表时       |
   | **apply**  | `func.apply(thisArg, [argsArray])` | 数组形式传递          | 立即执行       | 函数返回值       | 参数数量不确定/已有数组时       |
   | **bind**   | `func.bind(thisArg, arg1, arg2)` | 逐个参数传递          | 返回绑定后的函数 | 新的绑定函数     | 需要延迟执行/事件回调绑定this时 |
 
+  </div>
+
 #### 💻 代码示例对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 场景                | call 示例                     | apply 示例                    | bind 示例                     |
   |---------------------|------------------------------|------------------------------|------------------------------|
   | **基本用法**        | `sayHi.call(user, 'Hello')`  | `sayHi.apply(user, ['Hello'])` | `const bound = sayHi.bind(user); bound('Hello')` |
   | **参数传递**        | `Math.max.call(null, 1, 2, 3)` | `Math.max.apply(null, [1, 2, 3])` | `const max = Math.max.bind(null, 1); max(2, 3)` |
   | **构造函数绑定**     | `Animal.call(this, name)`    | `Animal.apply(this, [name])`  | `const BoundAnimal = Animal.bind(this); new BoundAnimal(name)` |
 
+  </div>
+
 #### 🚀 技术特性对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 特性                | call                          | apply                         | bind                          |
   |---------------------|-------------------------------|-------------------------------|-------------------------------|
   | **ES版本**          | ES3                           | ES3                           | ES5                           |
   | **性能**            | 较快（直接调用）               | 较慢（需解构数组）             | 最慢（需创建新函数）            |
   | **链式调用**        | 不支持                        | 不支持                        | 支持（返回函数）               |
   | **箭头函数**        | 无效（无法改变this）           | 无效                          | 无效                          |
+
+</div>
 
 #### 💡 最佳实践
   ```javascript
@@ -898,11 +1099,16 @@
 
 
 #### ⚠️ 常见误区
+
+ <div class="table-wrapper" markdown="block">
+
   | 错误用法            | 问题分析                      | 正确做法                  |
   |---------------------|-----------------------------|--------------------------|
   | `obj.method.call(null)` | 丢失this指向                | `obj.method.call(obj)`   |
   | `bind()`后立即调用    | 失去bind的意义               | 先绑定后调用              |
   | 多层bind            | 只有第一次bind生效            | 避免链式bind              |
+
+  </div>
 
   #### 🌟 特殊技巧
   ```javascript
@@ -924,12 +1130,17 @@
 ### <span style="color:#FF6F00"> 构造函数 new 之后都做了什么 </span>
 
 #### 📌 `new` 操作符的核心步骤
+
+ <div class="table-wrapper" markdown="block">
+
   | 步骤 | 操作描述                                                                 | 代码等效实现                                                                 |
   |------|--------------------------------------------------------------------------|-----------------------------------------------------------------------------|
   | 1    | **创建空对象**                                                            | `const obj = Object.create(constructor.prototype)`                          |
   | 2    | **绑定原型链**                                                            | `obj.__proto__ = constructor.prototype`                                     |
   | 3    | **绑定this并执行构造函数**                                                 | `constructor.apply(obj, args)`                                              |
   | 4    | **处理返回值**                                                            | `return typeof result === 'object' ? result : obj`                          |
+
+  </div>
 
 #### 💡 完整模拟实现
   ```javascript
@@ -954,12 +1165,17 @@
 ### <span style="color:#FF6F00"> 箭头函数为什么不能作为构造函数使用 </span>
 
 #### 📌 核心区别对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 特性                | 普通函数                          | 箭头函数                          |
   |---------------------|----------------------------------|----------------------------------|
   | **`[[Construct]]`** | 具有该内部方法，可被`new`调用       | 无此内部方法                      |
   | **`prototype`**     | 自动创建`prototype`属性            | 无`prototype`属性                |
   | **`this`绑定**      | 动态绑定（由调用方式决定）          | 词法绑定（定义时确定）             |
   | **`arguments`**     | 存在                              | 不存在（需用rest参数替代）         |
+
+  </div>
 
 #### 💡 技术原理详解
   1. **缺少`[[Construct]]`内部方法**  
@@ -970,6 +1186,9 @@
 ### <span style="color:#FF6F00"> ES6 新增特性 </span>
 
 #### 📌 语法增强
+
+ <div class="table-wrapper" markdown="block">
+
   | 特性                | 说明                                                                 | 示例                                                                 |
   |---------------------|---------------------------------------------------------------------|---------------------------------------------------------------------|
   | **let/const**       | 块级作用域变量声明                                                  | ```let x = 1; const PI = 3.14;```                                  |
@@ -979,7 +1198,12 @@
   | **参数默认值**      | 函数参数默认值                                                      | ```function log(msg = 'default') {}```                              |
   | **rest/spread**     | 剩余参数与展开语法                                                  | ```function f(...args) {}; [...arr1, ...arr2]```                   |
 
+  </div>
+
 #### 🚀 数据结构
+
+ <div class="table-wrapper" markdown="block">
+
   | 特性                | 说明                                                                 | 示例                                                                 |
   |---------------------|---------------------------------------------------------------------|---------------------------------------------------------------------|
   | **Class**           | 类语法糖（本质仍是原型继承）                                          | ```class Person { constructor() {} }```                            |
@@ -987,7 +1211,12 @@
   | **Symbol**          | 唯一值类型                                                          | ```const uid = Symbol('id');```                                    |
   | **Promise**         | 异步编程解决方案                                                    | ```new Promise((resolve) => setTimeout(resolve, 1000));```         |
 
+  </div>
+
   #### 💡 内置扩展
+
+   <div class="table-wrapper" markdown="block">
+
   | 特性                | 说明                                                                 | 示例                                                                 |
   |---------------------|---------------------------------------------------------------------|---------------------------------------------------------------------|
   | **数组方法**        | `find`/`includes`/`flat`等                                          | ```[1,2].find(x => x > 1);```                                      |
@@ -995,7 +1224,12 @@
   | **字符串方法**      | `startsWith`/`repeat`等                                             | ```'abc'.startsWith('a');```                                       |
   | **数值扩展**        | 二进制/八进制字面量+`Number`新方法                                   | ```0b1010; Number.isNaN(NaN);```                                   |
 
+  </div>
+
   #### 🌟 高级特性
+
+   <div class="table-wrapper" markdown="block">
+
   | 特性                | 说明                                                                 | 示例                                                                 |
   |---------------------|---------------------------------------------------------------------|---------------------------------------------------------------------|
   | **模块化**          | `import`/`export`语法                                               | ```import React from 'react'; export const name = 'ES6';```        |
@@ -1003,12 +1237,19 @@
   | **生成器**          | 暂停执行的函数                                                      | ```function* gen() { yield 1; }```                                 |
   | **Proxy/Reflect**   | 元编程能力                                                          | ```new Proxy(target, handler); Reflect.get(obj, 'prop');```        |
 
+  </div>
+
   #### 📊 兼容性解决方案
+
+   <div class="table-wrapper" markdown="block">
+
   | 工具                | 作用                                                                 |
   |---------------------|---------------------------------------------------------------------|
   | **Babel**           | 将ES6+代码转译为ES5                                                 |
   | **core-js**         | 提供Polyfill实现                                                    |
   | **Webpack**         | 打包+Tree Shaking                                                   |
+
+  </div>
 
 #### 💻 代码示例集
   ```javascript
@@ -1044,11 +1285,16 @@
 
 
 #### ⚠️ 注意事项
+
+ <div class="table-wrapper" markdown="block">
+
   | 特性                | 潜在问题                          | 解决方案                          |
   |---------------------|----------------------------------|----------------------------------|
   | **箭头函数**        | 不能作为构造函数                  | 改用`function`或`class`           |
   | **Class**           | 没有私有属性（ES2022新增#语法）    | 使用WeakMap或Symbol模拟           |
   | **模块化**          | 浏览器需`type="module"`           | 使用打包工具                      |
+
+  </div>
 
 #### 📈 演进关系
 ```mermaid
@@ -1071,6 +1317,9 @@
 ### <span style="color:#FF6F00"> Async 与 Await </span>
 
 #### 📌 核心概念对比
+
+ <div class="table-wrapper" markdown="block">
+
   | 特性                | Promise                          | Async/Await                      |
   |---------------------|----------------------------------|----------------------------------|
   | **语法**            | 链式调用(`.then().catch()`)       | 同步写法（`try/catch`）           |
@@ -1078,6 +1327,8 @@
   | **错误处理**        | `.catch()`或`reject`             | `try/catch`块捕获                 |
   | **调试**            | 断点难定位                        | 支持常规断点调试                  |
   | **兼容性**          | ES6+                             | ES2017+                          |
+
+  </div>
 
 #### 💡 基础用法
   ```javascript
@@ -1101,6 +1352,9 @@
 
 
 #### 🚀 进阶特性
+
+ <div class="table-wrapper" markdown="block">
+
   | 场景                | 代码示例                                                                 |
   |---------------------|-------------------------------------------------------------------------|
   | **并行请求**        | ```const [user, posts] = await Promise.all([fetchUser(), fetchPosts()]);``` |
@@ -1108,12 +1362,19 @@
   | **立即执行**        | ```(async () => { await init(); })();```                                |
   | **类方法**          | ```class Api { async getData() { /*...*/ } }```                         |
 
+  </div>
+
   #### ⚠️ 常见误区
+
+   <div class="table-wrapper" markdown="block">
+
   | 错误写法            | 问题分析                      | 正确写法                  |
   |---------------------|-----------------------------|--------------------------|
   | `await`忘记写       | 返回Promise而非实际值         | 确保所有异步操作前加`await` |
   | 忽略`try/catch`     | 未捕获的Promise rejection     | 完整错误处理              |
   | 不必要的串行        | 可并行的操作串行执行           | 合理使用`Promise.all`     |
+
+  </div>
 
 #### 🌟 最佳实践
  **错误处理封装**
@@ -1133,10 +1394,15 @@
   const data = await handleError(fetchData());
   ```
 
+   <div class="table-wrapper" markdown="block">
+
+
   | 场景                | 优化方案                      | 代码示例                                                                 |
   |---------------------|-----------------------------|-------------------------------------------------------------------------|
   | **并行请求**        | 提前发起请求                  | ```const p1 = fetch(url1); const p2 = fetch(url2); await p1; await p2;``` |
   | **懒加载**          | 需要时才await                 | ```const lazyData = fetchData(); /*...*/ const data = await lazyData;``` |
+
+</div>
 
   ```javascript
   // React组件中的使用
@@ -1164,18 +1430,28 @@
 ### **JavaScript 事件循环（Event Loop）核心机制**
 
 #### 1. 任务类型对比
+
+   <div class="table-wrapper" markdown="block">
+
   | 任务类型 | 触发方式 | 执行时机 | 典型API |
   |----------|----------|----------|---------|
   | **同步任务** | 立即执行 | 主线程直接执行 | `console.log()` |
   | **宏任务** | 事件队列 | 每次事件循环轮询 | `setTimeout`, `setInterval`, `I/O` |
   | **微任务** | 微任务队列 | 每个宏任务执行后立即执行 | `Promise.then`, `MutationObserver` |
 
+  </div>
+
   #### 2. 浏览器与Node.js差异
+
+  <div class="table-wrapper" markdown="block">
+
   | 特性 | 浏览器环境 | Node.js环境 |
   |------|------------|-------------|
   | **微任务类型** | Promise, MutationObserver | Promise, process.nextTick |
   | **事件循环阶段** | 简化的单阶段模型 | 6个复杂阶段（timers, poll等） |
   | **I/O处理** | 由浏览器引擎管理 | 使用libuv线程池 |
+
+  </div>
 
   #### 3. 执行顺序示例
   ```javascript
@@ -1190,6 +1466,9 @@
 ### **事件循环常见误区澄清表**
 
 #### 📌 常见误解与事实对比
+
+<div class="table-wrapper" markdown="block">
+
   | 误解（误区） | 事实（正解） | 原因分析 | 代码验证示例 |
   |--------------|--------------|----------|--------------|
   | **"setTimeout(fn,0)会立即执行"** | 实际至少延迟4ms（浏览器规范） | 浏览器强制的最小延迟时间 | `setTimeout(()=>console.log(1),0); console.log(2)` → 输出顺序总是 `2 → 1` |
@@ -1197,6 +1476,8 @@
   | **"await是同步操作"** | `await` 实质是微任务调度 | 等价于`.then()`的语法糖 | `(async ()=>{ await 1; console.log(1) })(); console.log(2)` → 输出 `2 → 1` |
   | **"所有异步都是宏任务"** | 异步任务分宏任务和微任务 | 设计初衷区分任务优先级 | `setTimeout(()=>console.log(1)); Promise.resolve().then(()=>console.log(2))` → 输出 `2 → 1` |
   | **"Node.js和浏览器的事件循环完全相同"** | Node.js有更复杂的多阶段循环 | libuv库的实现差异 | Node.js中`setImmediate`可能比`setTimeout(fn,0)`更快 |
+
+  </div>
 
 #### 💡 验证代码模板
   ```javascript
@@ -1233,11 +1514,15 @@
 
 **1. 封装（Inheritance）**
 
+<div class="table-wrapper" markdown="block">
+
   | 核心思想         | 实现方式                                                                 | 优点                                                                 |
   |------------------|-------------------------------------------------------------------------|---------------------------------------------------------------------|
   | **隐藏内部细节**  | 通过访问修饰符（如`private`/`protected`）控制属性和方法的可见性            | 提高安全性，防止外部直接修改内部数据                                  |
   | **暴露必要接口**  | 提供公共方法（getter/setter）访问私有属性                                  | 便于维护，可添加数据验证逻辑                                          |
   | **代码模块化**    | 将数据和操作数据的方法绑定在同一个类中                                     | 降低系统复杂度，提高复用性                                            |
+
+  </div>
 
 **代码示例**：
   ```javascript
@@ -1260,11 +1545,16 @@
   ```
 
 #### **2. 继承（Inheritance）**
+
+<div class="table-wrapper" markdown="block">
+
   | 核心思想         | 实现方式                                                                 | 优点                                                                 |
   |------------------|-------------------------------------------------------------------------|---------------------------------------------------------------------|
   | **代码复用**      | 子类继承父类的属性和方法                                                 | 避免重复代码                                                        |
   | **扩展功能**      | 子类可覆盖（override）或新增方法                                          | 保持父类功能的同时实现定制化                                          |
   | **多态基础**      | 父类引用指向子类对象                                                     | 提高系统扩展性                                                      |
+
+  </div>
 
 **代码示例**：
   ```javascript
@@ -1292,11 +1582,15 @@
 
 #### **3. 多态（Polymorphism）**
 
+<div class="table-wrapper" markdown="block">
+
   | 核心思想         | 实现方式                                                                 | 优点                                                                 |
   |------------------|-------------------------------------------------------------------------|---------------------------------------------------------------------|
   | **同一接口多种实现** | 父类定义抽象方法，子类提供具体实现                                        | 提高代码灵活性                                                      |
   | **运行时绑定**    | 根据实际对象类型调用对应方法（动态绑定）                                   | 便于扩展新功能，符合开闭原则                                          |
   | **接口统一**      | 不同子类对象可通过父类类型统一调用                                         | 降低模块间耦合度                                                    |
+
+  </div>
 
 **代码示例**：
   ```javascript
@@ -1326,6 +1620,9 @@
 ### <span style="color:#FF6F00"> 什么是WebSocket </span>
 
 #### 📌 核心概念
+
+<div class="table-wrapper" markdown="block">
+
   | 特性                | WebSocket                          | 传统HTTP                          |
   |---------------------|-----------------------------------|----------------------------------|
   | **协议**            | `ws://` 或 `wss://`（加密）        | `http://` 或 `https://`          |
@@ -1334,9 +1631,13 @@
   | **头部开销**        | 首次握手后仅2~10字节帧头             | 每次请求携带完整HTTP头部（500+字节） |
   | **延迟**            | 毫秒级                             | 每次请求需重建TCP连接（高延迟）      |
 
+  </div>
+
 #### 💡 工作原理
 
 ### 🌟 WebSocket 关键优势（表格展示）
+
+<div class="table-wrapper" markdown="block">
 
   | 场景                | WebSocket 优势                                                                 | 对比传统 HTTP 的劣势                                                                 |
   |---------------------|-------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
@@ -1346,7 +1647,7 @@
   | **协同编辑**        | 多人操作实时同步（如 Google Docs）                                              | 依赖手动保存或定时同步，存在版本冲突风险                                            |
   | **IoT 设备控制**    | 设备状态实时双向同步（控制指令+传感器数据）                                        | 需要频繁建立短连接，功耗高                                                          |
 
-  ---
+  </div>
 
 ### 💻 WebSocket 客户端示例（代码展示）
 
@@ -1384,25 +1685,40 @@
 ### ⚠️ WebSocket 使用注意事项
 
 #### 1. 连接稳定性
+
+<div class="table-wrapper" markdown="block">
+
   | 问题                | 解决方案                                                                 | 代码示例                                                                 |
   |---------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|
   | **意外断开**        | 实现自动重连机制                                                         | ```js socket.onclose = () => setTimeout(connect, 5000);```              |
   | **网络抖动**        | 添加心跳检测（Ping/Pong）                                                | ```js setInterval(() => socket.send('ping'), 30000);```                 |
   | **服务端重启**      | 客户端识别异常关闭（非1000状态码）重连                                    | ```js socket.onclose = (e) => { if(e.code !== 1000) reconnect(); }```   |
 
+  </div>
+
 #### 2. 数据处理
+
+<div class="table-wrapper" markdown="block">
+
   | 风险点              | 防护措施                                                                 | 示例代码                                                                 |
   |---------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|
   | **消息过大**        | 限制单帧大小（如10MB）                                                   | ```js socket.binaryType = 'arraybuffer'; // 处理分片```                  |
   | **消息洪水**        | 客户端/服务端实现速率限制                                                 | ```js let lastSend = 0; if(Date.now() - lastSend > 100) { sendMsg(); }```|
   | **二进制数据**      | 明确指定`binaryType`                                                     | ```js socket.binaryType = 'blob';```                                    |
 
+  </div>
+
 #### 3. 安全防护
+
+<div class="table-wrapper" markdown="block">
+
   | 威胁类型            | 防御方案                                                                 | 实现方式                                                                 |
   |---------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|
   | **DDoS攻击**        | 限制连接频率（如Nginx配置）                                              | ```nginx limit_req_zone $binary_remote_addr zone=ws:10m rate=10r/s;```  |
   | **跨站劫持**        | 校验`Origin`头+强制WSS加密                                               | ```js if(req.headers.origin !== 'https://mydomain.com') closeConnection();``` |
   | **注入攻击**        | 消息内容严格验证                                                         | ```js if(!isValid(msg)) { socket.close(1008, 'Invalid data'); }```      |
+
+  </div>
 
 #### 4. 生产环境必备
   **负载均衡配置**（Nginx示例）：
@@ -1426,11 +1742,16 @@
 ### **闭包（Closure）核心知识**
 
 #### 📌 闭包三大特征
+
+<div class="table-wrapper" markdown="block">
+
   | 特征                | 说明                                                                 | 代码示例                                                                 |
   |---------------------|---------------------------------------------------------------------|-------------------------------------------------------------------------|
   | **词法作用域穿透**   | 内层函数可访问外层作用域的变量                                        | `function outer() { let x=1; function inner() { console.log(x); } }`    |
   | **变量持久化**       | 外层函数执行后，变量仍被内层函数引用                                  | `const fn = (() => { let count=0; return () => count++; })();`          |
   | **私有状态封装**     | 实现模块化私有变量                                                   | `const module = (() => { const secret='data'; return { get() { return secret } } })();` |
+
+  </div>
 
   #### 🔍 内存模型图解
   ```mermaid
@@ -1441,13 +1762,19 @@
   ```
 ### 💻 面试题解析（表格展示）
 
+<div class="table-wrapper" markdown="block">
+
   | 题目类型          | 经典题目                                                                 | 解析要点                                                                 | 正确解法                                                                 |
   |-------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|
   | **循环闭包陷阱**  | `for(var i=0; i<3; i++){ setTimeout(()=>console.log(i), 100) }` 输出？  | var变量提升+闭包共享同一个i                                              | ```for(let i=0; i<3; i++){ setTimeout(()=>console.log(i), 100) }```     |
   | **私有变量实现**  | 如何用闭包实现计数器私有变量？                                            | 通过IIFE创建闭包作用域                                                   | ```const counter = (() => { let count=0; return () => count++ })();```  |
   | **内存泄漏场景**  | 以下代码有何问题？`function init(){ let el = document.getElementById('btn'); el.onclick=()=>{...el...} }` | DOM元素与闭包循环引用（旧版IE无法释放）                                   | ```init()后手动解除引用：el.onclick = null```                           |
 
+  </div>
+
   ### ⚠️ 注意事项（表格展示）
+
+<div class="table-wrapper" markdown="block">
 
   | 风险类型          | 具体表现                                                                 | 解决方案                                                                 | 代码示例                                                                 |
   |-------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|
@@ -1455,6 +1782,8 @@
   | **性能损耗**      | 在循环中创建大量闭包影响性能                                              | 1. 将闭包提取到循环外部<br>2. 避免闭包保存不必要的数据                   | ```function makeHandler(i){ return ()=>console.log(i) }```              |
   | **变量共享**      | 多个闭包共享同一变量产生意外覆盖                                          | 1. 使用独立作用域（IIFE）<br>2. 值类型变量深拷贝                         | ```(function(i){ setTimeout(()=>console.log(i)) })(i)```                |
   | **this指向**      | 闭包内this可能丢失（箭头函数除外）                                         | 1. 外层保存`const _this=this`<br>2. 使用bind绑定                         | ```function outer(){ const _this=this; function inner(){ _this.xxx } }``` |
+
+</div>
 
 #### 📝 面试题代码示例
   ```javascript
@@ -1481,11 +1810,16 @@
 ### <span style="color:#FF6F00"> 事件委托 </span>
 
 #### 📌 核心概念
+
+<div class="table-wrapper" markdown="block">
+
   | 术语                | 说明                                                                 |
   |---------------------|---------------------------------------------------------------------|
   | **事件冒泡**        | 事件从触发元素向上层传播到document对象                                |
   | **目标元素**        | `event.target`指向实际触发事件的元素                                  |
   | **委托元素**        | 绑定事件监听器的父级元素（通常为`ul`/`table`等容器）                   |
+
+  </div>
 
 #### 💡 实现原理
   1. **利用事件冒泡**：子元素事件会冒泡到父元素
@@ -1516,11 +1850,13 @@
   </script>
   ```
 
-## <span style="color:#8B949E">基础算法</span> 
+## <span id='Algorithm' style="color:#8B949E">基础算法</span> 
 
 ### <span style="color:#FF6F00"> 防抖截流实现及应用场景 </span>
 
 #### 1. 核心概念对比
+
+<div class="table-wrapper" markdown="block">
 
   | **特性**       | **防抖（Debounce）**                     | **节流（Throttle）**                     |
   |----------------|------------------------------------------|------------------------------------------|
@@ -1528,6 +1864,8 @@
   | **执行时机**   | 最后一次触发后的延迟时间                 | 按照固定频率执行                         |
   | **应用场景**   | 搜索框输入、窗口大小调整                 | 滚动事件、鼠标移动                       |
   | **实现重点**   | 清除前一个定时器                         | 判断是否到达执行时间                     |
+
+  </div>
 
 #### 2 防抖基础实现
   ```javascript
@@ -1657,12 +1995,16 @@
 
 #### 1. 核心概念对比
 
+<div class="table-wrapper" markdown="block">
+
   | **特性**       | **浅拷贝**                          | **深拷贝**                          |
   |----------------|-------------------------------------|-------------------------------------|
   | **复制层级**   | 只复制对象的第一层属性              | 递归复制对象的所有层级属性          |
   | **引用处理**   | 嵌套对象保持引用关系                | 嵌套对象也创建新实例                |
   | **内存占用**   | 较少                                | 较多                                |
   | **适用场景**   | 简单对象、性能敏感场景              | 复杂对象、需要完全隔离的场景        |
+
+  </div>
 
 #### 2. 浅拷贝实现方案
   ```javascript
@@ -1785,18 +2127,28 @@
 ### <span style="color:#FF6F00"> 数组去重 </span>
 
 #### 📌 基础方法对比
+
+<div class="table-wrapper" markdown="block">
+
   | 方法                | 代码示例                                | 时间复杂度 | 特点                  |
   |---------------------|----------------------------------------|------------|-----------------------|
   | **Set去重**         | `[...new Set(arr)]`                    | O(n)       | ES6+，最简单          |
   | **filter+indexOf**  | `arr.filter((v,i)=>arr.indexOf(v)===i)`| O(n²)      | 兼容性好              |
   | **reduce**          | `arr.reduce((a,b)=>a.includes(b)?a:[...a,b],[])` | O(n²) | 函数式编程           |
 
+  </div>
+
   #### 🚀 对象数组去重方案
+
+  <div class="table-wrapper" markdown="block">
+
   | 方法                | 代码示例                                | 支持类型           | 限制                  |
   |---------------------|----------------------------------------|--------------------|-----------------------|
   | **JSON序列化**      | `[...new Set(arr.map(JSON.stringify))].map(JSON.parse)` | 简单对象 | 不识别`NaN`/`undefined` |
   | **HashMap**         | `[...new Map(arr.map(v=>[typeof v+JSON.stringify(v),v])).values()]` | 所有类型 | 需处理特殊类型        |
   | **Lodash.uniqBy**   | `_.uniqBy(arr,'id')`                   | 复杂对象           | 需引入库             |
+
+  </div>
 
   #### 📊 性能对比（10k元素）
   | 方法          | 耗时(ms) | 内存占用 | 适用场景              |
@@ -1831,11 +2183,16 @@
 ### **JavaScript 数组对象去重方案（Markdown表格+代码）**
 
 #### 📌 基础方法对比
+
+<div class="table-wrapper" markdown="block">
+
   | 方法                | 适用场景               | 优点                  | 缺点                  | 代码示例                                                                 |
   |---------------------|-----------------------|----------------------|----------------------|-------------------------------------------------------------------------|
   | **Set + JSON**      | 简单对象，键序固定      | 代码简洁              | 无法处理特殊类型       | ```[...new Set(arr.map(JSON.stringify))].map(JSON.parse)```            |
   | **reduce + find**   | 小数据量               | 无需第三方库          | O(n²)时间复杂度        | ```arr.reduce((a,c) => a.some(v=>v.id===c.id) ? a : [...a,c], [])```   |
   | **lodash.uniqBy**   | 复杂项目               | 支持深比较和自定义key | 需引入lodash          | ```_.uniqBy(arr, 'id')```                                              |
+
+  </div>
 
 #### 🚀 高性能方案
   ```javascript
@@ -1919,6 +2276,8 @@
 
 ### 冒泡排序 vs 快速排序对比
 
+<div class="table-wrapper" markdown="block">
+
   | **对比项**       | **冒泡排序 (Bubble Sort)**                          | **快速排序 (Quick Sort)**                          |
   |------------------|----------------------------------------------------|----------------------------------------------------|
   | **时间复杂度**   | - 最坏：O(n²)<br>- 最好：O(n)（优化后）            | - 平均：O(nlogn)<br>- 最坏：O(n²)（当分区不平衡时）|
@@ -1930,6 +2289,8 @@
   | **优化方向**     | - 增加`swapped`标志提前退出                         | - 三数取中法选择基准<br>- 小数组切换为插入排序      |
   | **适用语言**     | 所有语言（适合教学演示）                           | 所有语言（实际应用首选）                           |
   | **JS 实现特点**  | 适合`TypedArray`等线性结构                         | 适合通用数组排序                                   |
+
+  </div>
 
 #### 补充说明
   1. **快速排序的最坏情况**：当每次选择的基准都是最大/最小值时（如已排序数组且总选第一个元素作为基准）
@@ -1979,9 +2340,11 @@
   console.log(findTreeNode(treeData, 'leaf-2'));
   ```
 
-## <span style="color:#8B949E">浏览器维度</span> 
+## <span id='Browser' style="color:#8B949E">浏览器维度</span> 
 
 ### <span style="color:#FF6F00"> Cookie SessionStorage LocalStorage 区别 </span>
+
+<div class="table-wrapper" markdown="block">
 
   | **特性**         | **Cookie**                     | **SessionStorage**            | **LocalStorage**             |
   |------------------|--------------------------------|-------------------------------|------------------------------|
@@ -1990,6 +2353,8 @@
   | **数据共享**     | 同源窗口共享                  | 仅当前窗口可用                | 同源窗口共享                |
   | **与服务端交互** | 每次请求自动携带              | 仅客户端使用                 | 仅客户端使用                |
   | **存储位置**     | 浏览器和服务器                | 仅浏览器                     | 仅浏览器                    |
+
+  </div>
 
 ### Cookie 操作
 
@@ -2121,11 +2486,20 @@
   console.log(origin1 === origin2); // false (子域名不同)
   ```
   触发场景
+
+```mermaid
+
   - XMLHttpRequest/Fetch 请求
+
   - WebSocket 连接
+
   - CSS 中通过 `@font-face` 加载字体
+
   - Canvas 的 `drawImage()` 使用外部图片
+
   - 跨域 Cookie/LocalStorage 访问
+
+  ```
 
 #### 2. 常见解决方案
 
@@ -2216,6 +2590,8 @@
 
 #### OSI七层模型 vs TCP/IP四层模型
 
+<div class="table-wrapper" markdown="block">
+
   | OSI七层模型        | TCP/IP四层模型    | 功能描述                                                                 | 典型协议/设备                  |
   |--------------------|------------------|--------------------------------------------------------------------------|-------------------------------|
   | **应用层**         | **应用层**       | 提供用户接口和网络服务                                                   | HTTP, FTP, DNS, SMTP          |
@@ -2226,9 +2602,13 @@
   | **数据链路层**     | **网络接口层**   | 帧同步、差错控制、MAC寻址                                                | Ethernet, PPP, Switch         |
   | **物理层**         |                  | 比特流传输、物理接口                                                     | RJ45, 光纤, 集线器            |
 
+  </div>
+
 ### <span style="color:#FF6F00"> http 和 https </span>
 
 #### 1. 基本概念对比
+
+<div class="table-wrapper" markdown="block">
 
   | **特性**         | **HTTP**                          | **HTTPS**                         |
   |------------------|-----------------------------------|-----------------------------------|
@@ -2237,6 +2617,8 @@
   | **安全性**       | 明文传输                         | 加密传输                         |
   | **协议栈**       | 应用层协议                       | HTTP + SSL/TLS                   |
   | **URL标识**      | `http://`                        | `https://`                       |
+
+  </div>
 
 #### 2 HTTPS加密流程（TLS握手）
   ```mermaid
@@ -2252,6 +2634,8 @@
 
 #### 1. 核心特性对比
 
+<div class="table-wrapper" markdown="block">
+
   | **特性**               | **TCP** (传输控制协议)                | **UDP** (用户数据报协议)            |
   |------------------------|--------------------------------------|------------------------------------|
   | **连接方式**           | 面向连接（三次握手）                 | 无连接                            |
@@ -2263,6 +2647,8 @@
   | **拥塞控制**           | 多种算法（Reno/CUBIC等）             | 无                                |
   | **传输单位**           | 字节流                               | 数据报文                          |
   | **适用场景**           | 文件传输、网页浏览、邮件             | 视频流、DNS查询、在线游戏         |
+
+  </div>
 
 #### 2. 协议头结构对比
 
@@ -2338,16 +2724,22 @@
 
 #### 缓存类型对比
 
+<div class="table-wrapper" markdown="block">
+
   | **缓存类型**       | **存储位置**      | **生命周期**               | **控制方式**               |
   |--------------------|-------------------|---------------------------|---------------------------|
   | **强缓存**         | 浏览器本地        | 根据`Cache-Control`/`Expires` | 服务端响应头              |
   | **协商缓存**       | 浏览器或代理服务器| 最后一次验证时间           | `Last-Modified`/`ETag`    |
   | **Service Worker** | 浏览器Cache API   | 编程控制                   | JavaScript代码            |
 
+  </div>
+
 
 ### <span style="color:#FF6F00"> GET 和 POST 区别 </span>
 
 #### 1. 基础特性对比
+
+<div class="table-wrapper" markdown="block">
 
   | **特性**         | GET                                     | POST                                   |
   |------------------|-----------------------------------------|----------------------------------------|
@@ -2359,6 +2751,8 @@
   | **书签**         | 可收藏为书签                           | 不可收藏                              |
   | **安全性**       | 不应传输敏感数据                       | 相对更安全（仍需要HTTPS）             |
   | **编码类型**     | 仅`application/x-www-form-urlencoded`   | 支持多种（form-data, json, binary等） |
+
+  </div>
 
 #### 2. 技术实现差异(HTTP报文对比)
 
@@ -2375,7 +2769,7 @@
   {"id": 123, "name": "John"}
   ```
 
-## <span style="color:#8B949E">React</span> 
+## <span id='React' style="color:#8B949E">React</span> 
 
 ### <span style="color:#FF6F00"> 虚拟 dom </span>
 
@@ -2409,6 +2803,8 @@
 
 #### 虚拟DOM核心优势对比表
 
+<div class="table-wrapper" markdown="block">
+
   | **核心优势**       | **具体表现**                                                                 | **技术实现**                                                                 |
   |--------------------|-----------------------------------------------------------------------------|-----------------------------------------------------------------------------|
   | **性能优化**       | 减少直接DOM操作次数，批量更新                                               | 通过Diff算法计算出最小变更集，统一应用到真实DOM                              |
@@ -2418,6 +2814,8 @@
   | **更好的代码维护** | UI与业务逻辑解耦，组件化开发更易维护                                         | 基于组件的架构设计，状态变化自动触发视图更新                                 |
   | **服务端渲染支持** | 支持同构应用（SSR），提高首屏加载速度和SEO                                   | 在服务端生成虚拟DOM字符串，客户端"激活"（hydrate）                           |
   | **更平滑的动画**   | 批量DOM更新减少布局抖动，配合现代浏览器API实现流畅动画                        | 利用requestAnimationFrame和双缓冲技术                                        |
+
+  </div>
 
 
 #### 性能优化实现
@@ -2481,6 +2879,8 @@
   ```
 #### 核心优化策略对比
 
+<div class="table-wrapper" markdown="block">
+
   | **优化策略**         | **实现原理**                                                                 | **适用场景**                     | **框架应用实例**                                                                 |
   |----------------------|-----------------------------------------------------------------------------|----------------------------------|--------------------------------------------------------------------------------|
   | **同级比较**         | 仅比较同一层级的节点，不跨层级递归                                          | 所有节点更新                     | React/Vue均采用此策略降低时间复杂度                                            |
@@ -2490,6 +2890,8 @@
   | **静态节点提升**     | 编译时标记静态节点，运行时跳过Diff                                          | 静态内容占比高的应用            | Vue 3的`hoistStatic`/React的`React.memo`                                       |
   | **区块树优化**       | 将动态节点划分为独立区块，减少比对范围                                      | 模板驱动的框架                  | Vue 3的`block tree`                                                             |
   | **最长递增子序列**   | 计算最小移动操作次数                                                        | 列表重排序                      | Vue 3的`patchKeyedChildren`算法                                                |
+
+  </div>
 
 
 ### <span style="color:#FF6F00"> Jsx组件Key的作用 </span>
@@ -2541,11 +2943,15 @@
 
 #### 1. 三大基本原则
 
+<div class="table-wrapper" markdown="block">
+
   | **原则**            | **描述**                                                                 | **代码体现**                                                                 |
   |---------------------|--------------------------------------------------------------------------|-----------------------------------------------------------------------------|
   | **单一数据源**      | 整个应用状态存储在单个store对象树中                                       | `const store = createStore(rootReducer)`                                    |
   | **状态只读**        | 只能通过dispatch action来修改状态                                        | `store.dispatch({ type: 'ADD_TODO', text: 'Learn Redux' })`                |
   | **纯函数修改**      | 使用纯函数reducer描述状态变化                                            | `function reducer(state = initialState, action) { ... }`                    |
+
+  </div>
 
 #### 2. 核心架构图解
 
@@ -2650,11 +3056,15 @@
 
 #### 4.2 常用中间件原理
 
+<div class="table-wrapper" markdown="block">
+
   | **中间件**         | 原理                                     |
   |------------------|-----------------------------------------|
   | **redux-thunk**         | 检查action是否为函数，是则执行函数并传入dispatch                   | 
   | **redux-logger**     | 在dispatch前后打印状态变化日志           | 
   | **redux-saga**     | 使用Generator函数管理副作用，监听特定action执行异步流程          | 
+
+</div>
 
 #### 5. React-Redux 连接原理
 
@@ -2709,6 +3119,8 @@
 
 #### 1. 核心组件对比
 
+<div class="table-wrapper" markdown="block">
+
   | **组件**          | **作用**                      | **常用属性**                                                                 |
   |-------------------|-------------------------------|-----------------------------------------------------------------------------|
   | `<BrowserRouter>` | 基于HTML5 history的路由容器    | `basename` (基础路径)                                                      |
@@ -2720,6 +3132,7 @@
   | `<Redirect>`      | 重定向组件                    | `from`, `to`, `push`, `exact`, `strict`                                    |
   | `<Prompt>`        | 导航离开确认                  | `when`, `message`                                                          |
 
+</div>
 
 ### 2 基本路由设置
   ```jsx
@@ -2743,12 +3156,16 @@
 
 #### 核心原理差异
 
+<div class="table-wrapper" markdown="block">
+
   | **特性**          | **History 路由**                          | **Hash 路由**                          |
   |-------------------|------------------------------------------|----------------------------------------|
   | **URL表现形式**   | `example.com/path`                       | `example.com/#/path`                   |
   | **实现原理**      | 基于HTML5 History API                    | 基于window.location.hash               |
   | **服务器要求**    | 需要服务端支持                           | 纯前端即可实现                         |
   | **SEO友好性**     | 友好（完整路径）                         | 不友好（搜索引擎忽略hash部分）         |
+
+  </div>
 
 #### 3.1 History 路由实现
   ```javascript
@@ -2840,6 +3257,8 @@
 
   React实现了一套**跨浏览器兼容**的事件系统，将所有原生事件包装为合成事件，具有统一的API和行为。
 
+  <div class="table-wrapper" markdown="block">
+
   | **特性**          | **原生DOM事件**               | **React合成事件**                     |
   |-------------------|-------------------------------|---------------------------------------|
   | 事件命名          | 全小写（onclick）             | 小驼峰（onClick）                     |
@@ -2847,6 +3266,8 @@
   | 事件对象          | 原生事件对象                  | SyntheticEvent对象                    |
   | 冒泡机制          | 可取消                        | 可取消                                |
   | 兼容性            | 浏览器差异大                  | 跨浏览器一致                          |
+
+  </div>
 
   #### 2. 事件绑定机制
 
@@ -2904,14 +3325,14 @@
 ### <span style="color:#FF6F00"> React 执行过程 </span>
 
 
-## <span style="color:#8B949E">TS</span> 
+## <span id='TS' style="color:#8B949E">TS</span> 
 
 
-## <span style="color:#8B949E">Webpack</span> 
+## <span id='Webpack' style="color:#8B949E">Webpack</span> 
 
 
 
-## <span style="color:#8B949E"> 前端整体纬度 </span> 
+## <span id='Front' style="color:#8B949E"> 前端整体纬度 </span> 
 
 ### <span style="color:#FF6F00"> ES6 module 和 CommonJS module 区别 </span>
 
