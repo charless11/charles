@@ -2488,7 +2488,6 @@
   触发场景
 
 ```mermaid
-
   - XMLHttpRequest/Fetch 请求
 
   - WebSocket 连接
@@ -2498,7 +2497,6 @@
   - Canvas 的 `drawImage()` 使用外部图片
 
   - 跨域 Cookie/LocalStorage 访问
-
   ```
 
 #### 2. 常见解决方案
@@ -2702,7 +2700,6 @@
 #### 3. 缓存流程
 
 ```mermaid
-
   浏览器请求资源。
 
   检查强缓存：
@@ -2907,7 +2904,6 @@
 #### 2. 三大核心功能
 
 ```mermaid
-
   帮助Diff算法准确识别哪些节点是相同的
 
   确保组件实例和DOM状态在重新渲染时正确保留
@@ -3243,7 +3239,6 @@
 #### 3. 关键转换步骤
 
 ```mermaid
-
   1.Babel: 将JSX转换为React.createElement调用
 
   2.Webpack: 打包所有模块为浏览器可执行的单一文件
@@ -3286,7 +3281,6 @@
 
 #### 3.1 事件池机制
 ```mermaid
-
   复用事件对象减少GC压力
 
   事件回调执行后立即回收属性
@@ -3295,7 +3289,6 @@
 #### 3.2 跨浏览器兼容
 
 ```mermaid
-
   事件对象属性标准化（如event.target vs event.srcElement）
 
   事件冒泡机制统一
@@ -3565,7 +3558,6 @@ function Parent() {
 #### 4. 关键结论
 
 ```mermaid
-
 引用稳定性只是前提
 useCallback 保证了函数引用不变，但子组件是否重渲染取决于它自己的渲染逻辑
 
@@ -3708,9 +3700,11 @@ interface Fiber {
 
 #### 4. 核心工作流程
 
+```mermaid
  Render阶段（可中断）
 
  Commit阶段（同步）
+ ```
 
 #### 5. 关键算法实现 调和算法（Reconciliation）
 
@@ -3733,7 +3727,6 @@ interface Fiber {
 #### 1. 双缓存机制的核心概念
 
 ```mermaid
-
 双缓存是指 React 同时维护两棵 Fiber 树：
 
 current 树：当前屏幕上显示的内容。
@@ -3742,7 +3735,6 @@ workInProgress 树：正在内存中构建的下一次渲染的内容。
 #### 2. 双缓存的工作流程
 
 ```mermaid
-
 阶段 1：创建初始树
 
 首次渲染时，React 创建current树（即rootFiber）。
@@ -3765,7 +3757,6 @@ workInProgress树变为新的current树。
 阶段 4：后续更新
 
 每次更新都重复上述过程，current和workInProgress树角色互换。
-
 ```
 
 #### 3. 双缓存的优势
@@ -3784,16 +3775,18 @@ workInProgress树变为新的current树。
 
 #### 1. 整体流程概览
 
+```mermaid
 React 的渲染分为 **协调（Reconciliation）** 和 **提交（Commit）** 两个阶段：
 
 触发更新 → 开始渲染 → Reconciliation（构建Fiber树） → Commit（更新DOM） → 绘制屏幕
+```
 
 #### 2. 核心阶段解析
 
 #### 2.1 Reconciliation（协调阶段）
-**可中断的异步过程**，主要工作：
 
 ```javascript
+//可中断的异步过程 主要工作：
 function workLoopConcurrent() {
   while (workInProgress !== null && !shouldYield()) {
     performUnitOfWork(workInProgress); // 处理当前Fiber节点
@@ -3834,7 +3827,6 @@ function workLoopConcurrent() {
 #### 3.1 Diff算法策略
 
 ```mermaid
-
   树对比：仅对相同层级的节点比较
 
   组件类型：类型不同则直接销毁重建
@@ -3843,12 +3835,13 @@ function workLoopConcurrent() {
 ```
 #### 3.2 双缓存机制
 
+```mermaid
 1.current树：当前显示界面对应的Fiber树
 
 2.workInProgress树：正在构建的新树
 
 渲染完成后两树指针交换
-
+```
 
 
 
@@ -4035,7 +4028,7 @@ type WithoutEmail = Omit<User, "email">;
 
 </div>
 
-## 可视化对比
+#### 可视化对比
 
 ```mermaid
 graph TD
@@ -4097,11 +4090,9 @@ if (condition) {
 
 ### <span style="color:#FF6F00"> 响应式开发 </span>
 
-####  1.核心概念
+####  核心概念: 响应式开发（Responsive Web Design）是指网页能够自动适应不同设备屏幕尺寸的开发方式。
 
-响应式开发（Responsive Web Design）是指网页能够自动适应不同设备屏幕尺寸的开发方式。
-
-#### 核心三要素：
+#### 1.核心三要素：
 ```css
 1. 流体网格（Fluid Grids）
 2. 弹性图片（Flexible Images）
@@ -4207,20 +4198,17 @@ if (condition) {
 #### 4.减少重排（Reflow）和重绘（Repaint）
 
 ```mermaid
-
 优先使用 不会触发回流的属性 实现动画（如 transform 和 opacity）。
 
 transform 属于 合成层属性，动画过程中仅需浏览器 合成新帧，不触发回流和重绘，性能最佳。
 修改 opacity 仅触发 重绘（不影响布局），性能优于修改背景色等其他属性。
 
 批量操作 DOM，避免频繁触发回流 / 重绘。
-
 ```
 
 #### 5. webpack优化打包 第三方包体积 （externals）
 
 ```mermaid
-
 1. 为什么需要 externals？
 减小包体积：避免将大型第三方库（如 loadsh）打包到 bundle 中。
 CDN 加载：通过 CDN requestJS 加载外部资源，提高加载速度。
@@ -4273,8 +4261,6 @@ module.exports = {
 
 ### <span style="color:#FF6F00"> 前端安全 </span>
 
-####  常见前端安全攻击及防御措施
-
 #### 1. XSS (跨站脚本攻击)
 
 #### 攻击方式：
@@ -4304,7 +4290,6 @@ Content-Security-Policy: default-src 'self'
 攻击流程：
 
 ```mermaid
-
 graph LR
     A[恶意网站] -->|诱导访问| B(用户浏览器)
     B -->|携带用户Cookie| C[目标网站]
@@ -4334,7 +4319,6 @@ Set-Cookie: sessionId=abc123; SameSite=Strict
 防御方案：
 
 ```mermaid
-
 # 设置X-Frame-Options头
 X-Frame-Options: DENY
 ```
