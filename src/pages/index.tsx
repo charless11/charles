@@ -80,7 +80,7 @@ function App() {
     <div style={{ marginBottom:10, color:  '#FF6F00'}}>
   欲买桂花同载酒
 </div>
-<Space.Compact style={{ width: '30%'}}>
+<Space.Compact style={{ width: '50%'}}>
       <Input value={value} onChange={(e)=>{setValue(e.target.value)}} defaultValue="Combine input and button" />
      
      

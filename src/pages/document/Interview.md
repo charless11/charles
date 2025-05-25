@@ -3306,49 +3306,1038 @@
 ```
 
 
-### <span style="color:#FF6F00"> 简述一下 React 的源码实现 </span>
 
 ### <span style="color:#FF6F00"> setState异步还是同步 </span>
 
+#### 1. 核心结论
+
+`setState` 的同步/异步行为取决于 **执行上下文**：
+
+<div class="table-wrapper" markdown="block">
+
+| 场景                  | 行为模式   | 触发时机                | 示例                     |
+|-----------------------|------------|-------------------------|--------------------------|
+| **React 事件 handlers** | ⏳ 异步批量 | 下次渲染前合并更新       | `onClick` 内的 setState  |
+| **生命周期方法**       | ⏳ 异步批量 | 当前渲染周期内处理       | `componentDidMount` 中   |
+| **原生事件/定时器**    | ⚡ 同步     | 立即执行                | `setTimeout` 回调中      |
+| **React 18+ Concurrent** | ⏳ 异步    | 根据优先级调度           | 使用 `createRoot` 时      |
+</div>
+
+#### 2 异步场景（默认行为）
+```javascript
+// React 合成事件中的表现（异步批量）
+handleClick = () => {
+  this.setState({ count: 1 });    // 不会立即更新
+  console.log(this.state.count);  // 输出旧值
+  this.setState({ count: 2 });    // 与前次合并
+  // 最终 count 会直接变成 2
+}
+```
+
+#### 3.React 18+ 的变化
+
+- React 17 及之前：部分场景同步
++ React 18 所有 setState 默认异步（通过 createRoot 启用）
+
 ### <span style="color:#FF6F00"> useEffect和useLayoutEffect区别 </span>
+
+#### 1. 核心区别速览
+
+<div class="table-wrapper" markdown="block">
+
+| 特性                | useEffect                     | useLayoutEffect                |
+|---------------------|-------------------------------|--------------------------------|
+| **执行时机**        | 浏览器绘制后（异步）          | DOM更新后、浏览器绘制前（同步）|
+| **阻塞渲染**        | ❌ 不阻塞                     | ✅ 会阻塞浏览器绘制            |
+| **适用场景**        | 数据获取、订阅等副作用        | DOM测量、同步样式修改等        |
+| **服务端渲染(SSR)** | ✅ 可安全使用                 | ⚠️ 会导致警告（应避免）        |
+</div>
+
+#### 2. 执行流程图示
+
+```mermaid
+graph TD
+    A[State/Props变更] --> B[虚拟DOM对比]
+    B --> C[DOM更新]
+    C --> D{useLayoutEffect?}
+    D -->|是| E[同步执行所有useLayoutEffect]
+    D -->|否| F[浏览器绘制屏幕]
+    F --> G[异步执行所有useEffect]
+  ```
+
+#### 3. 性能影响对比
+
+<div class="table-wrapper" markdown="block">
+
+| 指标               | useEffect                     | useLayoutEffect              |
+|--------------------|-------------------------------|------------------------------|
+| **首屏渲染速度**   | 🚀 更快（不阻塞绘制）         | 🐢 较慢（阻塞绘制）          |
+| **视觉稳定性**     | ⚠️ 可能有布局抖动             | ✅ 布局一次性到位            |
+| **内存占用**       | 💾 较低                       | 📈 较高（同步执行）          |
+| **CPU占用**        | ⏳ 分散到多个帧执行            | 🎯 集中执行可能造成卡顿      |
+| **可中断性**       | ✅ 可被高优先级任务中断        | ❌ 必须同步执行完成          |
+
+</div>
 
 ### <span style="color:#FF6F00"> ref使用场景 </span>
 
+#### 1. 基础使用场景
+
+<div class="table-wrapper" markdown="block">
+
+| 场景分类          | 具体用例                      | 代码示例                                                                 |
+|-------------------|-----------------------------|--------------------------------------------------------------------------|
+| **DOM 操作**      | 获取/修改DOM元素属性         | `const divRef = useRef(); <div ref={divRef}>` → `divRef.current.clientWidth` |
+| **焦点控制**      | 自动聚焦输入框                | `inputRef.current.focus()`                                               |
+| **媒体控制**      | 播放/暂停视频                 | `videoRef.current.play()`                                                |
+| **动画触发**      | 直接操作DOM动画               | `divRef.current.animate([...], {duration: 1000})`                        |
+
+</div>
+
+#### 2.1 组件通信
+```javascript
+// 子组件（使用 forwardRef + useImperativeHandle）
+const Child = forwardRef((props, ref) => {
+  useImperativeHandle(ref, () => ({
+    showAlert: () => alert('暴露的方法被调用')
+  }));
+  return <div>子组件</div>;
+});
+
+// 父组件调用
+function Parent() {
+  const childRef = useRef();
+  return (
+    <>
+      <Child ref={childRef} />
+      <button onClick={() => childRef.current.showAlert()}>触发子组件方法</button>
+    </>
+  );
+}
+```
+
 ### <span style="color:#FF6F00"> state和props区别 </span>
+
+#### 1. 基础概念对比
+
+<div class="table-wrapper" markdown="block">
+
+| 特性                | state（状态）                 | props（属性）                 |
+|---------------------|-----------------------------|------------------------------|
+| **所有权**          | 组件内部私有                 | 由父组件传入                  |
+| **可变性**          | 组件内通过`setState`修改      | 不可变（只读）                |
+| **数据流方向**      | 组件内部维护                 | 父组件 → 子组件单向流动        |
+| **初始化方式**      | `useState`或`this.state`     | 通过组件标签属性传递           |
+
+</div>
+
+#### 2 何时使用 state？
+```javascript
+// 适合存储会变化且影响UI的数据
+function Counter() {
+  const [count, setCount] = useState(0); // ✅ 正确用例
+  return (
+    <button onClick={() => setCount(c => c + 1)}>
+      点击次数: {count}
+    </button>
+  );
+}
+```
+#### 3. 核心设计原则对比
+
+<div class="table-wrapper" markdown="block">
+
+| 设计原则         | state（状态）                                   | props（属性）                                  |
+|------------------|-----------------------------------------------|-----------------------------------------------|
+| **单一数据源**   | 🔒 组件内部特有的数据                           | 🌐 跨组件共享的数据源                           |
+| **最小状态原则** | 🧹 只存储必要的UI状态                          | 🎯 尽量编写纯props组件（无状态组件）            |
+| **可预测性**     | 🎚️ 通过`setState`控制变化范围                  | 🚫 保持严格的不可变性（immutable）              |
+| **数据流**       | ⬆️ 组件自身维护                                | ⬇️ 父组件单向传递                              |
+| **调试友好度**   | 🔍 变化记录在组件实例中                        | 📝 更容易追踪数据来源                           |
+
+</div>
 
 ### <span style="color:#FF6F00"> React.memo和PureComponent </span>
 
+
+#### 1. 核心区别速览
+
+<div class="table-wrapper" markdown="block">
+
+| 特性                | React.memo                   | PureComponent               |
+|---------------------|-----------------------------|----------------------------|
+| **适用组件类型**    | 函数组件                    | 类组件                     |
+| **比较方式**        | 浅比较props                 | 浅比较props和state         |
+| **性能优化**        | 避免不必要的函数组件渲染      | 避免不必要的类组件渲染       |
+| **自定义比较**      | 支持第二个参数               | 通过shouldComponentUpdate   |
+
+</div>
+
+#### 2. React.memo 使用
+```jsx
+// 基础用法
+const MyComponent = React.memo(function MyComponent(props) {
+  /* 使用 props 渲染 */
+});
+
+// 自定义比较函数
+const Memoized = React.memo(
+  MyComponent,
+  (prevProps, nextProps) => {
+    // 返回 true 表示跳过渲染
+    return prevProps.id === nextProps.id;
+  }
+);
+```
+
+#### 3. PureComponent 使用
+
+```jsx
+
+class MyComponent extends React.PureComponent {
+  render() {
+    return <div>{this.props.value}</div>;
+  }
+}
+
+```
+
+### <span style="color:#FF6F00"> useCallback为什么要搭配React.memo使用 </span>
+
+#### 1. 核心原因：函数引用变化的本质问题
+
+`useCallback` 单独使用时只能解决 **函数创建成本** 问题，但无法阻止子组件重渲染，因为：
+
+```javascript
+// 即使使用useCallback
+const memoizedFn = useCallback(() => {}, []);
+
+// 当父组件重渲染时：
+memoizedFn === memoizedFn // true （引用相同）
+// 但子组件是否重渲染取决于props的浅比较
+```
+
+#### 2. 单独使用 useCallback（无效优化）
+
+```javascript
+
+function Parent() {
+  const [count, setCount] = useState(0);
+  const log = useCallback(() => console.log('Log'), []);
+
+  return (
+    <>
+      <button onClick={() => setCount(c => c + 1)}>Render {count}</button>
+      <Child onLog={log} /> {/* 即使log引用不变，Child仍会重渲染 */}
+    </>
+  );
+}
+
+// 没有React.memo，组件总会重渲染
+function Child({ onLog }) {
+  console.log('Child rendered!'); // 每次父组件更新都会打印
+  return <button onClick={onLog}>Log</button>;
+}
+```
+
+#### 3. 组合使用（有效优化）
+
+```javascript
+
+const MemoChild = React.memo(function Child({ onLog }) {
+  console.log('Child rendered!'); // 只有onLog引用变化时才会打印
+  return <button onClick={onLog}>Log</button>;
+});
+
+function Parent() {
+  const [count, setCount] = useState(0);
+  const log = useCallback(() => console.log('Log'), []);
+
+  return (
+    <>
+      <button onClick={() => setCount(c => c + 1)}>Render {count}</button>
+      <MemoChild onLog={log} /> {/* 不会随count更新而重渲染 */}
+    </>
+  );
+}
+```
+
+#### 4. 关键结论
+
+```mermaid
+
+引用稳定性只是前提
+useCallback 保证了函数引用不变，但子组件是否重渲染取决于它自己的渲染逻辑
+
+浅比较需要双方配合
+React.memo 的浅比较需要 useCallback 提供稳定的函数引用才能真正发挥作用
+
+性能优化是系统工程
+单独使用任一个都像只有锁没有钥匙：
+
+🔒 useCallback = 锁住函数引用
+🔑 React.memo = 检查props变化的钥匙
+
+💡 黄金法则：当函数需要作为props传递给被React.memo优化的子组件时，必须组合使用两者才能达到预期优化效果。
+```
+
+
 ### <span style="color:#FF6F00"> 自定义 Hooks实现 </span>
+
+
+#### 设置页面标题hook
+```javascript
+
+import { useEffect } from 'react';
+
+/**
+ * 用于设置和动态更新页面标题的自定义 Hook
+ * @param {string} title - 页面标题
+ * @param {boolean} [appendSiteName=false] - 是否在标题后追加网站名称
+ * @param {string} [siteName=''] - 网站名称，默认为空
+ * @returns {void}
+ */
+export function usePageTitle(title, appendSiteName = false, siteName = '') {
+    useEffect(() => {
+        // 构建完整标题
+        const fullTitle = appendSiteName 
+            ? `${title} | ${siteName}` 
+            : title;
+        
+        // 设置页面标题
+        document.title = fullTitle;
+        
+        // 组件卸载时可以选择恢复原标题
+        return () => {
+            // 如果需要在组件卸载时恢复原标题，可以在这里实现
+            // 例如：document.title = originalTitle;
+        };
+    }, [title, appendSiteName, siteName]);
+```
+
+#### 封装useSetState的hook
+
+```javascript
+import { useState, useCallback } from 'react';
+
+/**
+ * 模拟类组件的setState行为
+ * @param {Object} initialState 初始状态
+ * @returns {[state: Object, setState: Function]} 当前状态和更新函数
+ */
+function useSetState(initialState = {}) {
+  const [state, setState] = useState(initialState);
+
+  // 支持部分状态更新的setState
+  const updateState = useCallback((partialState) => {
+    setState(prev => ({
+      ...prev,
+      ...(typeof partialState === 'function' 
+        ? partialState(prev) 
+        : partialState)
+    }));
+  }, []);
+
+  return [state, updateState];
+}
+```
+基础用法
+
+```javascript
+
+function UserProfile() {
+  const [user, setUser] = useSetState({
+    name: 'Alice',
+    age: 25,
+    email: 'alice@example.com'
+  });
+
+  const updateName = () => {
+    // 支持对象形式更新
+    setUser({ name: 'Bob' });
+    
+    // 也支持函数形式（基于前一个状态）
+    // setUser(prev => ({ name: 'Bob' }));
+  };
+
+  return (
+    <div>
+      <p>Name: {user.name}</p>
+      <p>Age: {user.age}</p>
+      <button onClick={updateName}>Change Name</button>
+    </div>
+  );
+}
+```
 
 ### <span style="color:#FF6F00"> Fiber </span>
 
-### <span style="color:#FF6F00"> React 执行过程 </span>
+#### 1. Fiber 设计背景
+
+#### 解决传统Stack Reconciler的痛点
+
+| 问题                | Fiber解决方案               |
+|---------------------|---------------------------|
+| 递归不可中断         | 链表结构可中断恢复          |
+| 长时间阻塞主线程     | 增量渲染（时间切片）        |
+| 优先级无法区分       | 基于优先级的任务调度        |
+
+#### 2. Fiber 核心数据结构
+
+```typescript
+interface Fiber {
+  tag: WorkTag; // 组件类型（函数/类组件等）
+  key: string | null;
+  type: any;    // 组件函数/DOM标签类型
+  
+  // 链表结构
+  return: Fiber | null;  // 父节点
+  child: Fiber | null;   // 第一个子节点
+  sibling: Fiber | null; // 兄弟节点
+  
+  // 状态相关
+  memoizedState: any;    // Hook链表
+  stateNode: any;        // 类实例/DOM节点
+  
+  // 副作用
+  effects: Array<Fiber>; // 副作用集合
+  effectTag: SideEffectTag; // 更新标记
+}
+```
+#### 3. Fiber 双缓存机制
+
+#### 4. 核心工作流程
+
+ Render阶段（可中断）
+
+ Commit阶段（同步）
+
+#### 5. 关键算法实现 调和算法（Reconciliation）
+
+#### 6. 性能优化手段
+
+<div class="table-wrapper" markdown="block">
+
+| 优化技术        | 实现原理                                   | 优势点                          |
+|----------------|------------------------------------------|-------------------------------|
+| **时间切片**    | 将渲染任务分割为5ms左右的执行单元           | ⏳ 避免长时间阻塞主线程          |
+| **任务可中断**  | 通过Fiber节点保存当前工作进度               | 🔄 可暂停后从断点恢复渲染         |
+| **异步渲染**    | 根据事件类型分配不同优先级（如用户交互优先） | 🚀 提升关键用户操作的响应速度     |
+| **双缓存**      | 维护current和workInProgress两棵Fiber树     | 🖥️ 确保渲染过程不会显示中间状态    |
+| **增量更新**    | 仅处理发生变化的组件子树                   | ⚡ 减少不必要的计算和DOM操作      |
+
+</div>
+
+### <span style="color:#FF6F00"> Fiber 双缓存机制理解 </span>
+
+#### 1. 双缓存机制的核心概念
+
+```mermaid
+
+双缓存是指 React 同时维护两棵 Fiber 树：
+
+current 树：当前屏幕上显示的内容。
+workInProgress 树：正在内存中构建的下一次渲染的内容。
+```
+#### 2. 双缓存的工作流程
+
+```mermaid
+
+阶段 1：创建初始树
+
+首次渲染时，React 创建current树（即rootFiber）。
+每个 Fiber 节点的alternate为null。
+
+阶段 2：状态更新触发渲染
+
+状态变更（如setState）触发协调过程。
+React 基于current树创建workInProgress树：
+复用可复用的节点（通过alternate关联）。
+标记需要更新的节点（副作用标记）。
+
+阶段 3：提交阶段（Commit Phase）
+
+当workInProgress树构建完成后：
+React 将workInProgress树一次性应用到 DOM。
+workInProgress树变为新的current树。
+旧的current树成为下一次更新的起点。
+
+阶段 4：后续更新
+
+每次更新都重复上述过程，current和workInProgress树角色互换。
+
+```
+
+#### 3. 双缓存的优势
+
+```mermaid
+高效复用节点：通过alternate关联，React 可以快速判断哪些节点需要更新，哪些可以复用。
+
+暂停和恢复：Fiber 可以中断渲染任务，保存当前进度（workInProgress树），稍后继续。
+
+错误恢复：如果渲染过程中出错，可以丢弃workInProgress树，继续使用当前current树。
+
+平滑过渡：用户始终看到完整渲染的 UI，不会出现部分更新的中间状态。
+```
+
+### <span style="color:#FF6F00"> 简述一下 React 渲染流程 </span>
+
+#### 1. 整体流程概览
+
+React 的渲染分为 **协调（Reconciliation）** 和 **提交（Commit）** 两个阶段：
+
+触发更新 → 开始渲染 → Reconciliation（构建Fiber树） → Commit（更新DOM） → 绘制屏幕
+
+#### 2. 核心阶段解析
+
+#### 2.1 Reconciliation（协调阶段）
+**可中断的异步过程**，主要工作：
+
+```javascript
+function workLoopConcurrent() {
+  while (workInProgress !== null && !shouldYield()) {
+    performUnitOfWork(workInProgress); // 处理当前Fiber节点
+  }
+}
+```
+
+```mermaid
+具体步骤：
+
+1.beginWork
+
+处理组件更新，打上effectTag标记（如Placement、Update）
+对于类组件：调用render()方法
+对于函数组件：调用函数体
+
+2.completeWork
+
+创建DOM节点（HostComponent类型）
+收集effect列表（需要更新的节点链表）
+```
+#### 2.2 Commit（提交阶段）
+
+同步不可中断过程，分为三个子阶段：
+
+<div class="table-wrapper" markdown="block">
+
+| 子阶段          | 工作内容               | 生命周期调用               |
+|----------------|-----------------------|--------------------------|
+| **BeforeMutation** | DOM变更前准备         | `getSnapshotBeforeUpdate` |
+| **Mutation**      | 执行DOM操作           | `componentWillUnmount`    |
+| **Layout**        | DOM变更后处理         | `componentDidMount`/`componentDidUpdate` |
+
+</div>
+
+#### 3. 关键算法实现
+
+#### 3.1 Diff算法策略
+
+```mermaid
+
+  树对比：仅对相同层级的节点比较
+
+  组件类型：类型不同则直接销毁重建
+
+  Key优化：相同Key的节点视为可复用
+```
+#### 3.2 双缓存机制
+
+1.current树：当前显示界面对应的Fiber树
+
+2.workInProgress树：正在构建的新树
+
+渲染完成后两树指针交换
+
+
+
 
 
 ## <span id='TS' style="color:#8B949E">TS</span> 
 
+### <span style="color:#FF6F00"> TS 中 type 和 interface 区别 </span>
 
-## <span id='Webpack' style="color:#8B949E">Webpack</span> 
+#### 1. 基础特性对比
 
+<div class="table-wrapper" markdown="block">
+
+| 特性                | type（类型别名）               | interface（接口）              |
+|---------------------|-------------------------------|-------------------------------|
+| **声明合并**        | ❌ 不支持                     | ✅ 自动合并同名声明            |
+| **扩展方式**        | 交叉类型（`&`）               | `extends` 继承                |
+| **实现方式**        | 不能直接被类实现               | 可以用 `implements` 实现       |
+| **类型范围**        | 可表示任意类型（包括联合类型等）| 主要用于对象类型               |
+
+</div>
+
+
+#### 2. 语法差异
+
+#### 2.1 基本定义
+```typescript
+// type 示例
+type User = {
+  id: number;
+  name: string;
+};
+
+// interface 示例
+interface User {
+  id: number;
+  name: string;
+}
+```
+
+#### 2.2 扩展方式
+
+```typescript
+
+// type 扩展（交叉类型）
+type Admin = User & { 
+  privileges: string[];
+};
+
+// interface 扩展（继承）
+interface Admin extends User {
+  privileges: string[];
+}
+```
+
+#### 3. 核心区别详解
+
+#### 3.1 声明合并（Interface独有）
+
+```typescript
+
+interface User {
+  name: string;
+}
+
+interface User {
+  age: number;
+}
+
+// 最终 User 接口包含两个属性
+const user: User = {
+  name: 'Alice',
+  age: 30
+};
+```
+
+#### 3.2 类型表达能力
+
+```typescript
+
+// type 可以定义联合类型
+type ID = number | string;
+
+// type 可以定义元组类型
+type Point = [number, number];
+
+// type 可以使用条件类型
+type Nullable<T> = T | null;
+
+// interface 无法直接实现以上功能
+```
+
+
+
+
+### <span style="color:#FF6F00"> 泛型 </span>
+
+#### 基本概念
+
+泛型是创建可复用组件的工具，允许在定义函数、接口或类时**不预先指定具体类型**。
+
+```typescript
+// 泛型函数示例
+function identity<T>(arg: T): T {
+  return arg;
+}
+
+// 使用
+const output = identity<string>("hello");  // 显式指定类型
+const output2 = identity(42);             // 类型推断
+```
+
+### <span style="color:#FF6F00"> Pick、 Omit、 Exclude、 Extract </span>
+
+#### TypeScript 中，Pick、Omit、Exclude 和 Extract 是四个常用的工具类型，用于类型操作和转换。它们都是基于映射类型和条件类型实现的，下面分别解析：
+
+#### 1. Exclude<T, U>
+
+作用：从类型 T 中排除所有可分配给类型 U 的类型，返回剩余的类型。
+
+示例：
+
+```typescript
+type A = Exclude<string | number | boolean, number>; // string | boolean
+type B = Exclude<"a" | "b" | "c", "a" | "c">; // "b"
+```
+
+#### 2. Extract<T, U>
+
+作用：从类型 T 中提取所有可分配给类型 U 的类型，返回交集。
+
+示例：
+
+```typescript
+type A = Extract<string | number | boolean, number | string>; // string | number
+type B = Extract<"a" | "b" | "c", "a" | "c">; // "a" | "c"
+```
+
+#### 3. Pick<T, K>
+
+作用：从类型 T 中选择一组属性 K，创建一个新类型。
+
+示例：
+
+```typescript
+
+interface User {
+  name: string;
+  age: number;
+  email: string;
+}
+
+type NameAndAge = Pick<User, "name" | "age">; 
+// { name: string; age: number }
+```
+
+#### 4. Omit<T, K>
+
+作用：从类型 T 中排除属性 K，创建一个新类型。
+
+示例：
+
+```typescript
+
+interface User {
+  name: string;
+  age: number;
+  email: string;
+}
+
+type WithoutEmail = Omit<User, "email">; 
+// { name: string; age: number }
+```
+
+#### 对比总结
+
+<div class="table-wrapper" markdown="block">
+
+| 工具类型   | 作用域     | 操作方式   | 示例                                       | 输出结果               |
+|------------|------------|------------|--------------------------------------------|-----------------------|
+| `Exclude`  | 类型级别   | 排除类型   | `Exclude<number | string, number>`      | `string`             |
+| `Extract`  | 类型级别   | 提取类型   | `Extract<number | string, string>`      | `string`             |
+| `Pick`     | 属性级别   | 选择属性   | `Pick<User, 'name'>`                      | `{ name: string }`    |
+| `Omit`     | 属性级别   | 排除属性   | `Omit<User, 'email'>`                     | `{ name: string, age: number }` |
+
+</div>
+
+## 可视化对比
+
+```mermaid
+graph TD
+    A[输入类型] --> B{工具类型}
+    B -->|Exclude/Extract| C[联合类型操作]
+    B -->|Pick/Omit| D[对象属性操作]
+    C --> E[输出新联合类型]
+    D --> F[输出新对象类型]
+```
 
 
 ## <span id='Front' style="color:#8B949E"> 前端整体纬度 </span> 
 
 ### <span style="color:#FF6F00"> ES6 module 和 CommonJS module 区别 </span>
 
+#### 1. 核心特性对比
+
+<div class="table-wrapper" markdown="block">
+
+| 特性                | ES6 Module (ESM)               | CommonJS (CJS)                |
+|---------------------|-------------------------------|-------------------------------|
+| **加载方式**        | 静态编译时加载                | 动态运行时加载                |
+| **语法**            | `import/export`               | `require/module.exports`      |
+| **模块输出**        | 值的引用（动态绑定）          | 值的拷贝（浅拷贝）            |
+| **执行时机**        | 预解析阶段执行                | 运行时同步执行                |
+| **循环依赖处理**    | 支持更好的循环引用            | 处理复杂且可能出错            |
+| **浏览器支持**      | 现代浏览器原生支持            | 需要打包工具转换              |
+| **顶层this指向**    | `undefined`                   | `module.exports`对象          |
+
+</div>
+
+#### 2. 加载机制差异
+
+#### 2.1 ESM 静态加载
+```javascript
+// 编译时确定依赖关系
+import { foo } from './moduleA.js'; // ✅ 必须位于顶层
+export const bar = 'baz';
+
+// 错误示例
+if (condition) {
+  import moduleA from './moduleA.js'; // ❌ 不允许条件导入
+}
+```
+
+#### 2.2 CJS 动态加载
+
+```javascript
+
+// 运行时加载
+const moduleA = require('./moduleA'); // ✅ 可条件加载
+exports.bar = 'baz';
+
+// 动态导入示例
+if (condition) {
+  const moduleB = require('./moduleB'); // ✅ 允许
+}
+```
+
 ### <span style="color:#FF6F00"> 响应式开发 </span>
+
+####  1.核心概念
+
+响应式开发（Responsive Web Design）是指网页能够自动适应不同设备屏幕尺寸的开发方式。
+
+#### 核心三要素：
+```css
+1. 流体网格（Fluid Grids）
+2. 弹性图片（Flexible Images）
+3. 媒体查询（Media Queries）
+```
+#### 2. 技术实现方案
+
+#### 2.1 视口设置
+
+```javascript
+
+<!-- 必须的meta标签 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+```
+
+#### 2.2 媒体查询
+
+```css
+
+/* 移动优先原则 */
+.container {
+  width: 100%; /* 默认移动端样式 */
+}
+
+@media (min-width: 768px) {
+  /* 平板样式 */
+  .container { width: 750px; }
+}
+
+@media (min-width: 992px) {
+  /* 桌面样式 */
+  .container { width: 970px; }
+}
+
+@media (min-width: 1200px) {
+  /* 大屏样式 */
+  .container { width: 1170px; }
+}
+```
+
+#### 2.3 现代布局技术
+
+1. Flexbox布局
+
+```css
+.container {
+  display: flex;
+  flex-wrap: wrap; /* 允许换行 */
+}
+
+.item {
+  flex: 1 0 200px; /* 弹性基准200px */
+}
+```
+
+2. CSS Grid布局
+
+```css
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+```
+#### 2.4 响应式单位对照表
+
+<div class="table-wrapper" markdown="block">
+
+| 单位   | 说明                          | 典型使用场景                     | 示例代码                      |
+|--------|-------------------------------|--------------------------------|-----------------------------|
+| `vw`   | 视口宽度的1%                   | 全屏宽度元素                    | `width: 100vw;`             |
+| `vh`   | 视口高度的1%                   | 全屏高度元素                    | `height: 100vh;`            |
+| `rem`  | 相对于根元素(`<html>`)字体大小  | 字体大小/全局间距               | `font-size: 1.6rem;`        |
+| `em`   | 相对于当前元素字体大小          | 组件内部尺寸                    | `padding: 2em;`             |
+| `%`    | 相对于父元素尺寸                | 传统流体布局                    | `width: 50%;`               |
+| `vmin` | 视口宽度/高度中较小值的1%       | 确保元素在旋转设备上适配         | `min-height: 100vmin;`      |
+| `vmax` | 视口宽度/高度中较大值的1%       | 大尺寸元素适配                  | `max-width: 90vmax;`        |
+
+</div>
+
 
 ### <span style="color:#FF6F00"> 前端性能优化 </span>
 
+#### 1. 虚拟列表优化
+
+#### 2. 懒加载 按需加载
+
+```javascript
+
+ // 图片懒加载:
+<img src="placeholder.jpg" data-src="real-image.jpg" loading="lazy">
+```
+
+```javascript
+
+ // 预加载:
+<link rel="preload" href="critical.css" as="style">
+<link rel="prefetch" href="non-critical.js" as="script">
+```
+
+#### 3. useMemo useCallback
+
+#### 4.减少重排（Reflow）和重绘（Repaint）
+
+```mermaid
+
+优先使用 不会触发回流的属性 实现动画（如 transform 和 opacity）。
+
+transform 属于 合成层属性，动画过程中仅需浏览器 合成新帧，不触发回流和重绘，性能最佳。
+修改 opacity 仅触发 重绘（不影响布局），性能优于修改背景色等其他属性。
+
+批量操作 DOM，避免频繁触发回流 / 重绘。
+
+```
+
+#### 5. webpack优化打包 第三方包体积 （externals）
+
+```mermaid
+
+1. 为什么需要 externals？
+减小包体积：避免将大型第三方库（如 loadsh）打包到 bundle 中。
+CDN 加载：通过 CDN requestJS 加载外部资源，提高加载速度。
+```
+
+#### 6. webpack (分包策略) SplitChunksPlugin
+
+```javascript
+
+// webpack.config.js
+module.exports = {
+  // ...其他配置
+  optimization: {
+    splitChunks: {
+      chunks: 'all', // 对所有类型的块进行分割
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/, // 匹配node_modules
+          name: 'vendors', // 生成的文件名
+          priority: -10, // 优先级
+        },
+        default: {
+          minChunks: 2, // 最小引用次数
+          priority: -20,
+          reuseExistingChunk: true, // 复用已有的块
+        },
+      },
+    },
+    runtimeChunk: 'single', // 生成单独的运行时代码
+  },
+};
+```
+
+### <span style="color:#FF6F00"> 发版后前端页面没有更新如何解决 </span>
+
+<div class="table-wrapper" markdown="block">
+
+| 检查点               | 操作指引                      | 工具推荐                 |
+|----------------------|-----------------------------|-------------------------|
+| **浏览器缓存**       | 强制刷新 (`Ctrl+F5`/`Cmd+Shift+R`) | Chrome DevTools         |
+| **CDN边缘节点**      | 执行缓存刷新（URL/目录刷新）    | AWS CLI/阿里云CDN控制台  |
+| **负载均衡器**       | 检查缓存头配置和过期时间        | Nginx/Apache配置检查器   |
+| **Service Worker**   | 注销旧版本或强制更新           | Chrome Application面板   |
+| **本地存储数据**     | 清除localStorage/sessionStorage | `localStorage.clear()`  |
+| **移动端WebView**    | 调用原生缓存清除方法           | Android/iOS系统API      |
+| **代理服务器**       | 检查中间件缓存策略             | Fiddler/Charles抓包工具 |
+| **DNS缓存**          | 刷新本地DNS缓存               | `ipconfig /flushdns`    |
+
+</div>
+
 ### <span style="color:#FF6F00"> 前端安全 </span>
 
-### <span style="color:#FF6F00"> 前端设计模式 </span>
+####  常见前端安全攻击及防御措施
 
+#### 1. XSS (跨站脚本攻击)
 
+#### 攻击方式：
 
+```html
+<!-- 注入恶意脚本 -->
+<script>alert('XSS')</script>
+<img src="x" onerror="stealCookie()">
+```
+防御方案：
 
+```javaScript
 
+// 1. 内容转义
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;')
+           .replace(/</g, '&lt;')
+           .replace(/>/g, '&gt;');
+}
 
+// 2. 使用CSP策略
+// HTTP Header添加：
+Content-Security-Policy: default-src 'self'
+```
+#### 2. CSRF (跨站请求伪造)
+
+攻击流程：
+
+```mermaid
+
+graph LR
+    A[恶意网站] -->|诱导访问| B(用户浏览器)
+    B -->|携带用户Cookie| C[目标网站]
+```
+
+防御方案：
+
+```javaScript
+
+// 1. 添加CSRF Token
+<form>
+  <input type="hidden" name="_csrf" value="随机token">
+</form>
+
+// 2. 设置SameSite Cookie
+Set-Cookie: sessionId=abc123; SameSite=Strict
+```
+
+#### 3. 点击劫持 (Clickjacking)
+
+#### 攻击方式：
+```javaScript
+
+<iframe src="目标网站" style="opacity:0;position:fixed"></iframe>
+```
+
+防御方案：
+
+```mermaid
+
+# 设置X-Frame-Options头
+X-Frame-Options: DENY
+```
 
 
 

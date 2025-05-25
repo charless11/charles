@@ -11,10 +11,8 @@ const navItems: NavItem[] = [
   { id: 'Algorithm', content: '算法' },
   { id: 'TS', content: 'TS' },
   { id: 'Front', content: '前端' },
-
   { id: 'Browser', content: '浏览器' },
   { id: 'React', content: 'React' },
-  { id: 'Webpack', content: 'Webpack' },
 ];
 
 const AdvancedNavigation = () => {
