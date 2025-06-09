@@ -65,7 +65,7 @@
   | **调试技巧**        | 浏览器开发者工具中显示"Inherited from [父元素]"                            | 检查计算样式时显示明确赋值来源                                                |
   </div>
 
-### <span style="color:#FF6F00"> 标准模型和 IE 模型的区别 </span>
+### <span style="color:#FF6F00"> css盒模型 </span>
 
   | 对比项          | 标准模型（W3C 盒模型）                     | IE 模型（怪异模式盒模型）               |
   |----------------|------------------------------------------|---------------------------------------|
@@ -162,6 +162,25 @@
     display: table;
     clear: both;
   }
+  ```
+
+
+### <span style="color:#FF6F00"> CSS 中实现文字环绕图片的效果 </span>
+
+  ```html
+<div class="container">
+  <img src="image.jpg" alt="示例图片" class="float-img">
+  <p>这里是环绕图片的文字内容。这里是环绕图片的文字内容。这里是环绕图片的文字内容...</p>
+</div>
+  ```
+
+  ```css
+  .float-img {
+  float: left;       /* 图片向左浮动 */
+  margin-right: 15px; /* 图片与文字的间距 */
+  margin-bottom: 10px;
+  width: 200px;      /* 控制图片宽度 */
+}
   ```
 
 
@@ -1425,6 +1444,96 @@
   }
   ```
 
+### <span style="color:#FF6F00"> Promise 方法 </span>
+
+#### 1.Promise.resolve(value)
+
+```mermaid
+作用：创建一个已解决的 Promise
+使用场景：
+// 将现有值转为 Promise
+const resolvedPromise = Promise.resolve(42);
+
+// 确保函数总是返回 Promise
+function fetchData() {
+  return cachedData 
+    ? Promise.resolve(cachedData)
+    : fetch('/api/data');
+}
+```
+
+#### 2. Promise.reject(reason)
+```mermaid
+作用：创建一个已拒绝的 Promise
+使用场景：
+// 快速返回错误状态
+function validateInput(input) {
+  if (!input) {
+    return Promise.reject(new Error('输入不能为空'));
+  }
+  // 正常处理...
+}
+```
+
+#### 3. Promise.all(iterable)
+```mermaid
+作用：等待所有 Promise 完成，或第一个拒绝
+特点：
+全部成功时返回结果数组有一个失败立即拒绝
+使用场景：
+// 并行请求多个接口
+const [user, posts] = await Promise.all([
+  fetch('/user'),
+  fetch('/posts')
+]);
+```
+
+#### 4. Promise.allSettled(iterable)
+```mermaid
+作用：等待所有 Promise 完成（无论成功或失败）
+返回：包含每个 Promise 状态和结果的对象数组
+使用场景：
+// 需要知道所有请求的最终状态
+const results = await Promise.allSettled([
+  fetch('/api1'),
+  fetch('/api2')
+]);
+const successful = results.filter(r => r.status === 'fulfilled');
+```
+
+#### 5. Promise.race(iterable)
+```mermaid
+作用：返回第一个 settled (解决或拒绝) 的 Promise
+使用场景：
+// 设置请求超时
+const timeout = new Promise((_, reject) => {
+  setTimeout(() => reject(new Error('超时')), 5000);
+});
+
+try {
+  const data = await Promise.race([
+    fetch('/api'),
+    timeout
+  ]);
+} catch (err) {
+  // 处理超时或请求错误
+}
+```
+
+#### 6. Promise.any(iterable) (ES2021)
+
+```mermaid
+作用：返回第一个 fulfilled 的 Promise，全部拒绝时才拒绝
+使用场景：
+// 尝试多个备用数据源
+const data = await Promise.any([
+  fetch('/primary'),
+  fetch('/backup1'),
+  fetch('/backup2')
+]);
+```
+
+
 ### <span style="color:#FF6F00"> 事件循环 Event loop </span>
 
 ### **JavaScript 事件循环（Event Loop）核心机制**
@@ -1849,6 +1958,62 @@
     }, 1000);
   </script>
   ```
+### <span style="color:#FF6F00"> 函数作用域 的经典题型 </span>
+
+#### 1.变量提升与作用域
+
+```javascript
+
+var a = 1;
+function foo() {
+  console.log(a);
+  var a = 2;
+}
+foo();
+
+输出结果：undefined
+解析: 函数内部的 var a 会提升到函数作用域顶部，但赋值 (=2) 不会提升。
+```
+
+#### 2.闭包与作用域链
+
+```javascript
+
+function createCounter() {
+  let count = 0;
+  return function() {
+    count++;
+    console.log(count);
+  };
+}
+const counter = createCounter();
+counter(); // 1
+counter(); // 2
+
+解析：返回的函数通过闭包保留了 createCounter 的作用域，可以持续访问和修改 count。
+每次调用 counter() 都会访问同一个 count。
+
+```
+
+#### 3.动态作用域（this 绑定）
+
+```javascript
+
+const obj = {
+  name: "Bob",
+  sayName: function() {
+    console.log(this.name);
+  }
+};
+const fn = obj.sayName;
+fn();
+
+输出结果：undefined
+解析：fn 作为普通函数调用时，this 指向全局（非严格模式）或 undefined（严格模式），而非 obj。
+修复方法：fn.call(obj); // 输出 "Bob"
+
+```
+
 
 ## <span id='Algorithm' style="color:#8B949E">基础算法</span> 
 
@@ -3169,6 +3334,18 @@
   window.history.pushState(state, title, url);  // 添加历史记录
   window.history.replaceState(state, title, url); // 替换当前记录
   window.onpopstate = (event) => { /* 处理后退 */ };
+
+    useEffect(() => {
+    const handlePopState = () => {
+      setPath(window.location.pathname);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
 
   // React Router配置
   <BrowserRouter basename="/app">

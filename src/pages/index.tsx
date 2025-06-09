@@ -19,7 +19,7 @@ function App() {
   const [markdown, setMarkdown] = React.useState('');
   const [isVisible, setIsVisible] = useState(false);
   const [value, setValue] = useState('')
-  const [isShow,setIsShow] = useState(false)
+  const [isShow, setIsShow] = useState(false)
 
   const answer = '终不似少年游～'
 
@@ -61,58 +61,55 @@ function App() {
     }
   }
 
-  const onFinish =()=>{
-    if(answer===value){
+  const onFinish = () => {
+    if (answer === value) {
       setIsShow(true)
-    }else{
+    } else {
       setIsShow(false)
-
     }
-    
   }
 
-
   return <div id='container' className="markdown-container">
-
-{
-  !isShow?(
-    <div  style={{ width: '100%',margin:'20px 0 0 20px' }}>
-    <div style={{ marginBottom:10, color:  '#FF6F00'}}>
-  欲买桂花同载酒
-</div>
-<Space.Compact style={{ width: '50%'}}>
-      <Input value={value} onChange={(e)=>{setValue(e.target.value)}} defaultValue="Combine input and button" />
-     
-     
-      <Button onClick={onFinish}>确认</Button>
-    </Space.Compact>
-          <div style={{color: 'red',marginTop:10}}>输入正确答案解锁完整面试题</div>
-    </div>
-  ):(
- <LoadingScreen>
-      <div id='title' className='title'>前端面试总结</div>
-      {
-        isVisible && (
-          <div className='toTop' onClick={scrollToSection} >
-            <UpCircleFilled />
+    {
+      !isShow ? (
+        <div style={{ width: '100%', margin: '20px 0 0 20px' }}>
+          <div style={{ marginBottom: 10, color: '#FF6F00' }}>
+            欲买桂花同载酒
           </div>
-        )
-      }
-      <Nav />
-      <ReactMarkdown
-        rehypePlugins={[rehypeRaw, remarkGfm, rehypeHighlight]}
-      >
-        {markdown}
-      </ReactMarkdown>
-    </LoadingScreen>
-  )
-}
-   
+          <Space.Compact style={{ width: '50%' }}>
+            <Input value={value} onChange={(e) => { setValue(e.target.value) }} defaultValue="Combine input and button" />
+            <Button onClick={onFinish}>确认</Button>
+          </Space.Compact>
+          <div style={{ color: 'red', marginTop: 10 }}>输入正确答案解锁完整面试题</div>
+        </div>
+      ) : (
+        <LoadingScreen>
+          <div>
+            <div id='title' className='title'>前端面试总结</div>
+            {
+              isVisible && (
+                <div className='toTop' onClick={scrollToSection} >
+                  <UpCircleFilled />
+                </div>
+              )
+            }
+            <Nav />
+            <ReactMarkdown
+              rehypePlugins={[rehypeRaw, remarkGfm, rehypeHighlight]}
+            >
+              {markdown}
+            </ReactMarkdown>
+          </div>
+
+        </LoadingScreen>
+      )
+    }
 
 
 
 
-   
+
+
 
   </div>
   //  <ReactMarkdown>{markdown}</ReactMarkdown>;
