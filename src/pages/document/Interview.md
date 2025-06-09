@@ -30,6 +30,41 @@
   | **组合使用** | `.box:hover::after { content: "!"; }` | 悬停时添加感叹号         |
   </div>
 
+### <span style="color:#FF6F00"> src和href区别 </span>
+
+  <div class="table-wrapper" markdown="block">
+
+| 特性               | `src` (Source)                          | `href` (Hypertext Reference)          |
+|--------------------|----------------------------------------|---------------------------------------|
+| **用途**           | 嵌入外部资源到当前文档                 | 建立与外部资源的关联链接              |
+| **加载行为**       | 立即加载并替换当前元素内容             | 不自动加载，需用户交互或显式触发      |
+| **阻塞渲染**       | 是（如 `<script>`, `<img>`）           | 否（除 `<link rel="stylesheet">` 外） |
+| **典型标签**       | `<img>`, `<script>`, `<iframe>`, `<audio>` | `<a>`, `<link>`, `<area>`             |
+| **示例代码**       | `<img src="image.png">`                | `<a href="page.html">Link</a>`        |
+| **资源类型**       | 必须内容（脚本、媒体等）               | 辅助资源（样式表、导航链接等）        |
+| **加载时机**       | 解析到标签时立即加载                   | 按需加载（点击或预加载）              |
+| **是否影响DOM**    | 是（可能阻塞解析）                     | 否（CSS 例外）                        |
+  </div>
+
+  ```html
+
+  src 的阻塞场景：
+  
+  <!-- 同步阻塞 -->
+  <script src="app.js"></script>
+
+  <!-- 异步优化 -->
+  <script src="app.js" defer></script>
+
+  href 的特殊情况：
+
+  <!-- 阻塞渲染（CSS需优先加载） -->
+  <link href="style.css" rel="stylesheet">
+
+  <!-- 不阻塞（预加载） -->
+  <link href="data.json" rel="preload" as="fetch">
+  ```
+
 ### <span style="color:#FF6F00">link 和@import 引入方式区别</span>
 
 
